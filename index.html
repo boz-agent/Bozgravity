@@ -723,6 +723,13 @@
 
     // Check OAuth Access Token return on page load
     window.addEventListener("DOMContentLoaded", () => {
+      // Auto redirect if session exists
+      const existingUser = localStorage.getItem('boz_user');
+      if (existingUser) {
+        window.location.href = "dashboard.html";
+        return;
+      }
+
       if (window.location.hash) {
         const params = new URLSearchParams(window.location.hash.substring(1));
         const accessToken = params.get("access_token");
@@ -733,8 +740,12 @@
           .then(res => res.json())
           .then(user => {
             if (user.email && user.email.toLowerCase().endsWith("@gmail.com")) {
-              alert("LOGIN GOOGLE OAUTH SUKSES!\n\nNama: " + (user.name || "User") + "\nEmail Verified: " + user.email + "\n\nNavigasi ke Dashboard Bozgravity...");
-              window.history.replaceState({}, document.title, window.location.pathname);
+              localStorage.setItem('boz_user', JSON.stringify({
+                name: user.name || "User",
+                email: user.email,
+                picture: user.picture || ""
+              }));
+              window.location.href = "dashboard.html";
             } else {
               alert("AKSES DITOLAK!\n\nEmail: " + (user.email || "Unknown") + "\nHanya email Google publik (@gmail.com) yang diizinkan.\nEmail GSuite / Workspace organisasi / domain custom ditolak untuk mencegah abuse.");
               window.history.replaceState({}, document.title, window.location.pathname);
