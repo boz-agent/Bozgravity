@@ -170,8 +170,8 @@ const response = await client.chat.completions.create({
       
       // Load real 24H API Key registered in 9Router DB Pool
       let currentKey = localStorage.getItem('boz_key');
-      if (!currentKey || (!currentKey.startsWith('sk-be8') && !currentKey.startsWith('sk-boz-'))) {
-        currentKey = 'sk-be898323dfc0de15-ck6mhv-544c1c7a';
+      if (!currentKey || !currentKey.startsWith('sk-boz-')) {
+        currentKey = 'sk-boz-retail-24h-active-fullpool-v1';
         localStorage.setItem('boz_key', currentKey);
       }
       
