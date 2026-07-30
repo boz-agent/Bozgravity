@@ -78,7 +78,7 @@
           </div>
           <div class="bg-boz-dark/50 p-3 rounded-lg border border-boz-border/50">
             <span class="text-slate-400 block mb-1">Sisa Masa Aktif</span>
-            <span class="font-bold text-emerald-400 text-sm">23 Jam 59 Min</span>
+            <span id="keyTimerDisplay" class="font-bold text-emerald-400 text-sm">23 J 59 M 59 S</span>
           </div>
           <div class="bg-boz-dark/50 p-3 rounded-lg border border-boz-border/50">
             <span class="text-slate-400 block mb-1">Rate Limit</span>
@@ -168,9 +168,36 @@ const response = await client.chat.completions.create({
       document.getElementById('accountEmail').innerText = userSession.email;
       if (userSession.picture) document.getElementById('userAvatar').src = userSession.picture;
       
-      // Load or generate temporary key
-      let currentKey = localStorage.getItem('boz_key') || ('sk-boz-' + Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15));
-      localStorage.setItem('boz_key', currentKey);
+      // Load real 24H API Key registered in 9Router DB Pool
+      let currentKey = localStorage.getItem('boz_key');
+      if (!currentKey || !currentKey.startsWith('sk-boz-')) {
+        currentKey = 'sk-boz-retail-24h-active-fullpool-v1';
+        localStorage.setItem('boz_key', currentKey);
+      }
+      
+      // Setup dynamic 24H Countdown Timer
+      let expireTime = localStorage.getItem('boz_key_expires');
+      if (!expireTime) {
+        expireTime = Date.now() + (24 * 60 * 60 * 1000);
+        localStorage.setItem('boz_key_expires', expireTime);
+      }
+
+      function updateCountdown() {
+        const now = Date.now();
+        const diff = expireTime - now;
+        if (diff <= 0) {
+          document.getElementById('keyTimerDisplay').innerText = "EXPIRED (Silakan Top Up)";
+          document.getElementById('keyTimerDisplay').className = "font-bold text-rose-500 text-sm";
+          return;
+        }
+        const hours = Math.floor(diff / (1000 * 60 * 60));
+        const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+        const secs = Math.floor((diff % (1000 * 60)) / 1000);
+        document.getElementById('keyTimerDisplay').innerText = `${hours} J ${mins} M ${secs} S`;
+      }
+      updateCountdown();
+      setInterval(updateCountdown, 1000);
+
       document.getElementById('apiKeyDisplay').innerText = currentKey;
       document.getElementById('snippetKey').innerText = currentKey;
     }
