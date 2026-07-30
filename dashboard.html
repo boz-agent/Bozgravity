@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Dashboard Developer — Bozgravity Gateway</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Google+Sans:ital,wght@0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Google Sans', 'sans-serif'] },
+          colors: {
+            'boz-black': '#0a0a0a',
+            'boz-dark': '#121212',
+            'boz-card': '#1a1a1a',
+            'boz-border': '#2a2a2a',
+            'boz-orange': '#ff5e00',
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-boz-black text-slate-100 min-h-screen font-sans flex flex-col antialiased">
+
+  <!-- Top Navbar -->
+  <header class="border-b border-boz-border bg-boz-dark/80 backdrop-blur-md sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <a href="index.html" class="flex items-center gap-2">
+          <img src="logo_transparent.png" alt="Bozgravity" class="h-8 w-auto">
+          <span class="font-bold text-lg text-white tracking-tight">Bozgravity <span class="text-boz-orange text-xs px-2 py-0.5 rounded bg-boz-orange/10 border border-boz-orange/20">Dashboard</span></span>
+        </a>
+      </div>
+      <div class="flex items-center gap-4">
+        <div id="userInfo" class="flex items-center gap-2 bg-boz-card border border-boz-border px-3 py-1.5 rounded-full text-xs text-slate-300">
+          <img id="userAvatar" src="https://via.placeholder.com/32" class="w-5 h-5 rounded-full" alt="Avatar">
+          <span id="userEmail" class="font-semibold text-slate-200">user@gmail.com</span>
+        </div>
+        <button onclick="logout()" class="text-xs text-slate-400 hover:text-white flex items-center gap-1">
+          <i data-lucide="log-out" class="w-3.5 h-3.5"></i> Logout
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 py-8 grid grid-cols-1 lg:grid-cols-3 gap-8">
+    
+    <!-- Left Column: Key & Usage -->
+    <div class="lg:col-span-2 space-y-6">
+      
+      <!-- API Key Card -->
+      <div class="bg-boz-card border border-boz-border rounded-2xl p-6 relative overflow-hidden">
+        <div class="flex items-center justify-between mb-4">
+          <h2 class="text-lg font-bold text-white flex items-center gap-2">
+            <i data-lucide="key" class="w-5 h-5 text-boz-orange"></i> API Key Aktif Anda
+          </h2>
+          <span class="text-xs bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-2.5 py-1 rounded-full font-medium">Status: ACTIVE</span>
+        </div>
+        
+        <div class="bg-boz-dark border border-boz-border rounded-xl p-4 flex items-center justify-between gap-2 mb-4">
+          <code id="apiKeyDisplay" class="text-sm sm:text-base font-mono text-boz-orange font-semibold truncate">sk-boz-********************************</code>
+          <button onclick="copyApiKey()" class="bg-boz-orange hover:bg-orange-600 text-white px-4 py-2 rounded-lg text-xs font-semibold flex items-center gap-1.5 shrink-0 transition-all">
+            <i data-lucide="copy" class="w-3.5 h-3.5"></i> Copy Key
+          </button>
+        </div>
+
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 text-xs">
+          <div class="bg-boz-dark/50 p-3 rounded-lg border border-boz-border/50">
+            <span class="text-slate-400 block mb-1">Paket Aktif</span>
+            <span class="font-bold text-white text-sm">Harian Retail</span>
+          </div>
+          <div class="bg-boz-dark/50 p-3 rounded-lg border border-boz-border/50">
+            <span class="text-slate-400 block mb-1">Sisa Masa Aktif</span>
+            <span class="font-bold text-emerald-400 text-sm">23 Jam 59 Min</span>
+          </div>
+          <div class="bg-boz-dark/50 p-3 rounded-lg border border-boz-border/50">
+            <span class="text-slate-400 block mb-1">Rate Limit</span>
+            <span class="font-bold text-white text-sm">60 Req / Min</span>
+          </div>
+          <div class="bg-boz-dark/50 p-3 rounded-lg border border-boz-border/50">
+            <span class="text-slate-400 block mb-1">Endpoint</span>
+            <span class="font-bold text-boz-orange text-sm truncate">api.bozagent.my.id</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Integration Snippet -->
+      <div class="bg-boz-card border border-boz-border rounded-2xl p-6">
+        <h3 class="text-md font-bold text-white mb-3 flex items-center gap-2">
+          <i data-lucide="code" class="w-4 h-4 text-boz-orange"></i> Quick Integration (OpenAI SDK Compatible)
+        </h3>
+        <div class="bg-boz-dark p-4 rounded-xl font-mono text-xs text-slate-300 overflow-x-auto border border-boz-border">
+<pre><code>import { OpenAI } from 'openai';
+
+const client = new OpenAI({
+  baseURL: 'https://api.bozagent.my.id/v1',
+  apiKey: '<span id="snippetKey">sk-boz-...</span>',
+});
+
+const response = await client.chat.completions.create({
+  model: 'boz/minimax-m3',
+  messages: [{ role: 'user', content: 'Halo Bozgravity!' }],
+});</code></pre>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Right Column: Buy Retail / Top Up -->
+    <div class="space-y-6">
+      
+      <!-- ShopeePay QRIS Buy Box -->
+      <div class="bg-boz-card border border-boz-orange/30 rounded-2xl p-6 relative">
+        <h3 class="text-md font-bold text-white mb-2 flex items-center gap-2">
+          <i data-lucide="qr-code" class="w-5 h-5 text-boz-orange"></i> Perpanjang / Top Up Key
+        </h3>
+        <p class="text-xs text-slate-400 mb-4">Bayar instant via ShopeePay / All QRIS. Key otomatis terbit & aktif 24 jam.</p>
+        
+        <div class="bg-boz-dark p-4 rounded-xl border border-boz-border text-center space-y-3 mb-4">
+          <span class="text-xs text-slate-400 block">Paket Retail Harian</span>
+          <span class="text-2xl font-extrabold text-white">Rp 5.000 <span class="text-xs font-normal text-slate-400">/ 24 Jam</span></span>
+          <button onclick="generateQRIS()" class="w-full bg-boz-orange hover:bg-orange-600 text-white font-bold py-2.5 rounded-xl text-xs transition-all flex items-center justify-center gap-2">
+            <i data-lucide="credit-card" class="w-4 h-4"></i> Generate QRIS ShopeePay
+          </button>
+        </div>
+
+        <div id="qrisContainer" class="hidden text-center space-y-3 p-4 bg-white rounded-xl">
+          <img id="qrisImage" src="" class="mx-auto w-48 h-48 border rounded" alt="QRIS">
+          <span class="text-xs text-slate-800 font-bold block">Scan QRIS via ShopeePay / e-Wallet</span>
+          <span class="text-[10px] text-slate-500 block">Status: Menunggu Pembayaran...</span>
+        </div>
+      </div>
+
+      <!-- Account Info -->
+      <div class="bg-boz-card border border-boz-border rounded-2xl p-6 space-y-3">
+        <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wider">Account Detail</h4>
+        <div class="text-xs space-y-2">
+          <div class="flex justify-between text-slate-300">
+            <span>Verified Email:</span>
+            <span id="accountEmail" class="font-semibold text-white"></span>
+          </div>
+          <div class="flex justify-between text-slate-300">
+            <span>Provider Auth:</span>
+            <span class="text-emerald-400 font-semibold">Google OAuth</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <script>
+    lucide.createIcons();
+
+    // Check user session
+    const userSession = JSON.parse(localStorage.getItem('boz_user') || '{}');
+    if (!userSession.email) {
+      window.location.href = 'index.html';
+    } else {
+      document.getElementById('userEmail').innerText = userSession.email;
+      document.getElementById('accountEmail').innerText = userSession.email;
+      if (userSession.picture) document.getElementById('userAvatar').src = userSession.picture;
+      
+      // Load or generate temporary key
+      let currentKey = localStorage.getItem('boz_key') || ('sk-boz-' + Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15));
+      localStorage.setItem('boz_key', currentKey);
+      document.getElementById('apiKeyDisplay').innerText = currentKey;
+      document.getElementById('snippetKey').innerText = currentKey;
+    }
+
+    function copyApiKey() {
+      const key = localStorage.getItem('boz_key');
+      navigator.clipboard.writeText(key);
+      alert('API Key berhasil disalin ke clipboard!');
+    }
+
+    function logout() {
+      localStorage.removeItem('boz_user');
+      localStorage.removeItem('boz_key');
+      window.location.href = 'index.html';
+    }
+
+    function generateQRIS() {
+      alert("Menghubungkan ke ShopeePay QRIS Gateway...\n\nScan QRIS yang muncul untuk mengaktifkan akses key sk-boz-* 24 Jam!");
+    }
+  </script>
+</body>
+</html>

@@ -683,7 +683,14 @@
           return;
         }
 
-        alert("LOGIN GOOGLE OAUTH SUKSES!\n\nNama: " + (payload.name || "User") + "\nEmail Verified: " + email + "\n\nNavigasi ke Dashboard Bozgravity...");
+        // Save session & redirect to dashboard
+        localStorage.setItem('boz_user', JSON.stringify({
+          name: payload.name || "User",
+          email: email,
+          picture: payload.picture || ""
+        }));
+
+        window.location.href = "dashboard.html";
       } catch (e) {
         alert("Gagal memproses token OAuth Google: " + e.message);
       }
