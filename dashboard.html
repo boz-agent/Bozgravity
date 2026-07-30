@@ -168,12 +168,10 @@ const response = await client.chat.completions.create({
       document.getElementById('accountEmail').innerText = userSession.email;
       if (userSession.picture) document.getElementById('userAvatar').src = userSession.picture;
       
-      // Load real 24H API Key registered in 9Router DB Pool
-      let currentKey = localStorage.getItem('boz_key');
-      if (!currentKey || !currentKey.startsWith('sk-boz-')) {
-        currentKey = 'sk-boz-retail-24h-active-fullpool-v1';
-        localStorage.setItem('boz_key', currentKey);
-      }
+      // Force active master key sk-boz-* from 9Router DB Pool
+      const validKey = 'sk-boz-retail-24h-active-fullpool-v1';
+      localStorage.setItem('boz_key', validKey);
+      let currentKey = validKey;
       
       // Setup dynamic 24H Countdown Timer
       let expireTime = localStorage.getItem('boz_key_expires');
