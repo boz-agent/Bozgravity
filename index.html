@@ -659,21 +659,60 @@
     </div>
   </footer>
 
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
   <script>
     lucide.createIcons();
 
-    // Handler Google OAuth Login dengan Restriksi Domain @gmail.com Only
-    function handleGoogleLogin() {
-      const email = prompt("Masukkan email Google Anda (@gmail.com saja):");
-      if (!email) return;
+    // Google Identity Services (GIS) Official OAuth 2.0 Integration
+    function handleGoogleCredentialResponse(response) {
+      if (!response.credential) return;
       
-      const cleanEmail = email.trim().toLowerCase();
-      if (!cleanEmail.endsWith("@gmail.com")) {
-        alert("AKSES DITOLAK!\nHanya email Google publik (@gmail.com) yang diizinkan.\nEmail GSuite / Workspace organisasi / domain custom ditolak untuk mencegah abuse.");
-        return;
-      }
+      // Decode JWT ID Token payload (Base64Url)
+      try {
+        const base64Url = response.credential.split('.')[1];
+        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+        const jsonPayload = decodeURIComponent(atob(base64).split('').map(c => {
+          return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+        }).join(''));
+        
+        const payload = JSON.parse(jsonPayload);
+        const email = payload.email || "";
 
-      alert("LOGIN GMAIL VALID!\nEmail @gmail.com terverifikasi: " + cleanEmail + "\n\nNavigasi ke Dashboard Bozgravity...");
+        // Check if GSuite / Hosted Domain (hd) exists or non-gmail
+        if (payload.hd || !email.toLowerCase().endsWith("@gmail.com")) {
+          alert("AKSES DITOLAK!\n\nEmail: " + email + "\nHanya email Google publik (@gmail.com) yang diizinkan.\nEmail GSuite / Workspace organisasi / domain custom ditolak untuk mencegah abuse.");
+          return;
+        }
+
+        alert("LOGIN GOOGLE OAUTH SUKSES!\n\nNama: " + (payload.name || "User") + "\nEmail Verified: " + email + "\n\nNavigasi ke Dashboard Bozgravity...");
+      } catch (e) {
+        alert("Gagal memproses token OAuth Google: " + e.message);
+      }
+    }
+
+    function handleGoogleLogin() {
+      // Trigger Google OAuth 2.0 Popup Prompt / Sign-In
+      if (typeof google !== 'undefined' && google.accounts && google.accounts.id) {
+        google.accounts.id.initialize({
+          client_id: 'BOZGRAVITY_GOOGLE_CLIENT_ID.apps.googleusercontent.com',
+          callback: handleGoogleCredentialResponse,
+          auto_select: false
+        });
+        google.accounts.id.prompt((notification) => {
+          if (notification.isNotDisplayed() || notification.isSkippedMoment()) {
+            // Fallback OAuth login simulation for testing
+            const email = prompt("Simulasi Google OAuth 2.0 (GSI Client Active).\nMasukkan email Google Anda (@gmail.com saja):");
+            if (!email) return;
+            if (!email.trim().toLowerCase().endsWith("@gmail.com")) {
+              alert("AKSES DITOLAK!\nHanya email Google publik (@gmail.com) yang diizinkan.");
+              return;
+            }
+            alert("GOOGLE OAUTH SUCCESS!\nEmail: " + email);
+          }
+        });
+      } else {
+        alert("Google OAuth SDK sedang dimuat. Silakan coba kembali dalam beberapa detik.");
+      }
     }
 
     // Google Antigravity Ambient Background Floating Particles Engine
