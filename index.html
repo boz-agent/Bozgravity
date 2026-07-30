@@ -690,19 +690,28 @@
     }
 
     function handleGoogleLogin() {
-      // Direct Google Identity OAuth 2.0 Web Auth Code Flow (No localhost restriction)
-      const clientId = "100066545753-4b99l4mlls2tbsdv957hek9tnh7dk05a.apps.googleusercontent.com";
-      const redirectUri = window.location.origin + window.location.pathname;
-      
-      const authUrl = "https://accounts.google.com/o/oauth2/v2/auth?" + new URLSearchParams({
-        client_id: clientId,
-        redirect_uri: redirectUri,
-        response_type: "token",
-        scope: "email profile openid",
-        prompt: "select_account"
-      }).toString();
-
-      window.location.href = authUrl;
+      // Official Google Identity Services (GIS) Prompt & One Tap Client Initializer
+      if (window.google && window.google.accounts && window.google.accounts.id) {
+        window.google.accounts.id.initialize({
+          client_id: "100066545753-4b99l4mlls2tbsdv957hek9tnh7dk05a.apps.googleusercontent.com",
+          callback: handleGoogleCredentialResponse,
+          auto_select: false,
+          cancel_on_tap_outside: true
+        });
+        window.google.accounts.id.prompt((notification) => {
+          if (notification.isNotDisplayed() || notification.isSkippedMoment()) {
+            // Fallback render invisible container button click
+            const hiddenDiv = document.createElement("div");
+            document.body.appendChild(hiddenDiv);
+            window.google.accounts.id.renderButton(hiddenDiv, { theme: "outline", size: "large" });
+            const btn = hiddenDiv.querySelector('div[role="button"]');
+            if (btn) btn.click();
+            setTimeout(() => hiddenDiv.remove(), 2000);
+          }
+        });
+      } else {
+        alert("Google Identity SDK belum siap. Silakan refresh halaman.");
+      }
     }
 
     // Check OAuth Access Token return on page load
