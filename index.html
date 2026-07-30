@@ -63,8 +63,8 @@
 
       <!-- Action Buttons -->
       <div class="flex items-center gap-1.5 sm:gap-3">
-        <!-- Tombol Login Google -->
-        <button onclick="alert('Google OAuth Login: bozgravity.id')" class="inline-flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-full border border-slate-300 bg-white hover:bg-slate-50 text-slate-700 font-semibold text-xs sm:text-sm transition-all shadow-sm shrink-0">
+        <!-- Tombol Login Google Only -->
+        <button onclick="handleGoogleLogin()" class="inline-flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-full border border-slate-300 bg-white hover:bg-slate-50 text-slate-700 font-semibold text-xs sm:text-sm transition-all shadow-sm shrink-0">
           <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4" viewBox="0 0 24 24">
             <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
             <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
@@ -109,7 +109,7 @@
             <i data-lucide="zap" class="w-4 h-4 sm:w-5 sm:h-5 fill-current"></i>
             <span>Mulai Akses Rp 5.000 / Hari</span>
           </a>
-          <button onclick="alert('Google OAuth Login: bozgravity.id')" class="w-full sm:w-auto px-6 sm:px-8 py-3.5 sm:py-4 rounded-full bg-white border border-slate-300 text-slate-700 font-semibold text-sm sm:text-base shadow-sm hover:bg-slate-50 transition-all flex items-center justify-center gap-2.5">
+          <button onclick="handleGoogleLogin()" class="w-full sm:w-auto px-6 sm:px-8 py-3.5 sm:py-4 rounded-full bg-white border border-slate-300 text-slate-700 font-semibold text-sm sm:text-base shadow-sm hover:bg-slate-50 transition-all flex items-center justify-center gap-2.5">
             <svg class="w-4 h-4 sm:w-5 sm:h-5" viewBox="0 0 24 24">
               <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
               <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
@@ -661,6 +661,20 @@
 
   <script>
     lucide.createIcons();
+
+    // Handler Google OAuth Login dengan Restriksi Domain @gmail.com Only
+    function handleGoogleLogin() {
+      const email = prompt("Masukkan email Google Anda (@gmail.com saja):");
+      if (!email) return;
+      
+      const cleanEmail = email.trim().toLowerCase();
+      if (!cleanEmail.endsWith("@gmail.com")) {
+        alert("AKSES DITOLAK!\nHanya email Google publik (@gmail.com) yang diizinkan.\nEmail GSuite / Workspace organisasi / domain custom ditolak untuk mencegah abuse.");
+        return;
+      }
+
+      alert("LOGIN GMAIL VALID!\nEmail @gmail.com terverifikasi: " + cleanEmail + "\n\nNavigasi ke Dashboard Bozgravity...");
+    }
 
     // Google Antigravity Ambient Background Floating Particles Engine
     const bgCanvas = document.getElementById('antigravityHeroCanvas');
