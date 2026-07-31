@@ -57,8 +57,8 @@
 
       <!-- Navigation Links (Desktop) -->
       <nav class="hidden lg:flex items-center gap-8 text-sm font-medium text-slate-700">
+        <a href="#live-status" class="hover:text-boz-blue transition-colors">Live Monitor</a>
         <a href="#model" class="hover:text-boz-blue transition-colors">Katalog Model</a>
-        <a href="#live-status" class="hover:text-boz-blue transition-colors">Live Status</a>
         <a href="#harga" class="hover:text-boz-blue transition-colors">Harga Retail</a>
         <a href="#kompatibilitas" class="hover:text-boz-blue transition-colors">Integrasi SDK</a>
       </nav>
@@ -90,7 +90,7 @@
     </div>
   </header>
 
-  <!-- 1. HERO SECTION -->
+  <!-- 1. HERO SECTION (ORIGINAL FULL VERSION) -->
   <section class="hero-google relative pt-8 pb-16 sm:pt-16 sm:pb-24 overflow-hidden border-b border-slate-100">
     <canvas id="antigravityHeroCanvas" class="absolute inset-0 w-full h-full z-10 opacity-70"></canvas>
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-20 text-center">
@@ -107,28 +107,86 @@
           <span class="text-boz-orange">dalam Satu Key.</span>
         </h1>
         
-        <p class="text-base sm:text-xl text-slate-600 font-normal max-w-2xl mx-auto mb-8 sm:mb-10 leading-relaxed">
+        <p class="text-sm sm:text-lg lg:text-xl text-slate-600 font-normal leading-relaxed max-w-2xl mx-auto mb-8 sm:mb-10 px-2 sm:px-0">
           Drop-in OpenAI replacement untuk developer Indonesia. Akses seluruh model AI premium dalam 1 endpoint <code class="bg-slate-100 px-1.5 py-0.5 rounded text-xs sm:text-sm font-mono text-boz-blue">sk-boz-*</code> universal dengan failover otomatis dan latency ultra-rendah.
         </p>
 
         <!-- CTA Buttons -->
-        <div class="flex flex-wrap items-center justify-center gap-3 sm:gap-4 mb-10 sm:mb-14">
-          <button onclick="triggerGoogleOneTap()" class="btn-boz-orange font-bold text-sm sm:text-base px-6 sm:px-8 py-3 sm:py-4 rounded-full shadow-lg flex items-center gap-2">
-            <span>Mulai Sekarang</span>
-            <i data-lucide="arrow-right" class="w-4 h-4 sm:w-5 sm:h-5"></i>
-          </button>
-          
-          <a href="#kompatibilitas" class="bg-slate-100 hover:bg-slate-200 text-slate-800 font-semibold text-sm sm:text-base px-6 sm:px-8 py-3 sm:py-4 rounded-full transition-all flex items-center gap-2">
-            <i data-lucide="terminal" class="w-4 h-4 sm:w-5 sm:h-5 text-slate-600"></i>
-            <span>Lihat Integrasi</span>
+        <div class="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 mb-10 sm:mb-14 px-4 sm:px-0">
+          <a href="#harga" class="w-full sm:w-auto px-6 sm:px-8 py-3.5 sm:py-4 rounded-full bg-boz-blue text-white font-bold text-sm sm:text-base shadow-lg hover:bg-blue-600 transition-all flex items-center justify-center gap-2.5">
+            <i data-lucide="zap" class="w-4 h-4 sm:w-5 sm:h-5 fill-current"></i>
+            <span>Mulai Akses Rp 5.000 / Hari</span>
           </a>
+          <button onclick="triggerGoogleOneTap()" class="w-full sm:w-auto px-6 sm:px-8 py-3.5 sm:py-4 rounded-full bg-white border border-slate-300 text-slate-700 font-semibold text-sm sm:text-base shadow-sm hover:bg-slate-50 transition-all flex items-center justify-center gap-2.5">
+            <svg class="w-4 h-4 sm:w-5 sm:h-5" viewBox="0 0 24 24">
+              <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+              <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+              <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
+              <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
+            </svg>
+            <span>Masuk dengan Google</span>
+          </button>
+        </div>
+
+        <div class="flex flex-wrap items-center justify-center gap-4 sm:gap-6 text-xs sm:text-sm font-medium text-slate-600 mb-8 sm:mb-12">
+          <span class="flex items-center gap-1.5"><i data-lucide="check-circle-2" class="w-4 h-4 text-boz-orange shrink-0"></i> Tanpa Kartu Kredit</span>
+          <span class="flex items-center gap-1.5"><i data-lucide="check-circle-2" class="w-4 h-4 text-boz-orange shrink-0"></i> Setup 2 Menit</span>
+          <span class="flex items-center gap-1.5"><i data-lucide="check-circle-2" class="w-4 h-4 text-boz-orange shrink-0"></i> High-Speed Failover</span>
         </div>
       </div>
+
+      <!-- Quick Code Terminal Box -->
+      <div class="relative max-w-4xl mx-auto">
+        <div class="bg-slate-950 rounded-2xl sm:rounded-3xl p-3 sm:p-6 shadow-2xl border border-slate-800 text-white relative overflow-hidden text-left font-mono">
+          
+          <div class="flex items-center justify-between pb-3 sm:pb-4 border-b border-slate-800 mb-3 sm:mb-4">
+            <div class="flex items-center gap-2 sm:gap-3 overflow-hidden">
+              <div class="flex gap-1.5 shrink-0">
+                <span class="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-rose-500"></span>
+                <span class="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-amber-500"></span>
+                <span class="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-emerald-500"></span>
+              </div>
+              <span class="text-[10px] sm:text-xs text-slate-400 truncate">bozgravity-gateway — bash</span>
+            </div>
+            <div class="flex items-center gap-1.5 text-[10px] sm:text-xs text-emerald-400 font-semibold shrink-0">
+              <span class="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
+              <span>ONLINE</span>
+            </div>
+          </div>
+          
+          <div class="p-3 sm:p-6 rounded-xl sm:rounded-2xl bg-slate-900/90 border border-slate-800 text-[11px] sm:text-sm leading-relaxed overflow-x-auto text-slate-200">
+            <div class="flex items-center justify-between text-slate-400 text-[11px] sm:text-xs mb-2 sm:mb-3 pb-2 border-b border-slate-800 font-sans">
+              <span class="flex items-center gap-1.5"><i data-lucide="terminal" class="w-3.5 h-3.5 text-boz-orange"></i> Quick Request</span>
+              <button onclick="navigator.clipboard.writeText(document.getElementById('heroCodeBlock').innerText); alert('Kode cURL berhasil disalin!')" class="px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-[10px] sm:text-xs text-slate-300 transition-colors flex items-center gap-1 font-sans shrink-0">
+                <i data-lucide="copy" class="w-3 h-3"></i> Salin Kode
+              </button>
+            </div>
+            
+<pre id="heroCodeBlock" class="whitespace-pre overflow-x-auto font-mono"><span class="text-purple-400">curl</span> -X POST https://api.bozagent.my.id/v1/chat/completions \
+  <span class="text-boz-blue">-H</span> <span class="text-emerald-300">"Content-Type: application/json"</span> \
+  <span class="text-boz-blue">-H</span> <span class="text-emerald-300">"Authorization: Bearer sk-boz-retail-24h-active-fullpool-v1"</span> \
+  <span class="text-boz-blue">-d</span> '{
+    <span class="text-sky-300">"model"</span>: <span class="text-emerald-300">"minimax-m3"</span>,
+    <span class="text-sky-300">"messages"</span>: [
+      {<span class="text-sky-300">"role"</span>: <span class="text-emerald-300">"user"</span>, <span class="text-sky-300">"content"</span>: <span class="text-emerald-300">"Hello Bozgravity!"</span>}
+    ]
+  }'
+
+<span class="text-slate-500"># Response HTTP 200 OK (38ms)</span>
+<span class="text-slate-400">{</span>
+  <span class="text-sky-300">"id"</span>: <span class="text-emerald-300">"chatcmpl-bozgravity-node-882"</span>,
+  <span class="text-sky-300">"model"</span>: <span class="text-emerald-300">"minimax-m3"</span>,
+  <span class="text-sky-300">"choices"</span>: [{<span class="text-sky-300">"message"</span>: {<span class="text-sky-300">"role"</span>: <span class="text-emerald-300">"assistant"</span>, <span class="text-sky-300">"content"</span>: <span class="text-emerald-300">"Connected!"</span>}}]
+<span class="text-slate-400">}</span></pre>
+          </div>
+        </div>
+      </div>
+
     </div>
   </section>
 
   <!-- 2. PUBLIK LIVE MODEL MONITOR (HALAMAN DEPAN) -->
-  <section id="live-status" class="py-12 sm:py-16 bg-white border-b border-slate-100">
+  <section id="live-status" class="py-12 sm:py-16 bg-slate-50 border-b border-slate-200">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
         <div>
@@ -136,18 +194,18 @@
             <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
             REALTIME PUBLIC MODEL MONITOR
           </div>
-          <h2 class="font-display text-2xl sm:text-4xl font-bold text-boz-black">Model Active Pool & Health</h2>
+          <h2 class="font-display text-2xl sm:text-4xl font-bold text-boz-black">Model Active Pool & Health Status</h2>
         </div>
         <div class="flex items-center gap-3 text-xs text-slate-500 font-medium">
-          <span class="bg-slate-100 px-3 py-1.5 rounded-full border border-slate-200">Endpoint: <code class="text-boz-blue font-bold">api.bozagent.my.id</code></span>
-          <span class="bg-emerald-50 text-emerald-700 px-3 py-1.5 rounded-full border border-emerald-200 font-semibold">Gateway Status: 100% ONLINE</span>
+          <span class="bg-white px-3 py-1.5 rounded-full border border-slate-200 shadow-sm">Endpoint: <code class="text-boz-blue font-bold">api.bozagent.my.id</code></span>
+          <span class="bg-emerald-50 text-emerald-700 px-3 py-1.5 rounded-full border border-emerald-200 font-semibold">Gateway: 100% ONLINE</span>
         </div>
       </div>
 
       <!-- Grid Cards Live Models -->
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="liveModelGrid">
         <!-- Model Card 1 -->
-        <div class="card-boz-white p-6 relative">
+        <div class="card-boz-white p-6 relative bg-white">
           <div class="flex justify-between items-start mb-4">
             <div class="flex items-center gap-2">
               <span class="w-3 h-3 rounded-full bg-emerald-500"></span>
@@ -163,7 +221,7 @@
         </div>
 
         <!-- Model Card 2 -->
-        <div class="card-boz-white p-6 relative">
+        <div class="card-boz-white p-6 relative bg-white">
           <div class="flex justify-between items-start mb-4">
             <div class="flex items-center gap-2">
               <span class="w-3 h-3 rounded-full bg-emerald-500"></span>
@@ -179,7 +237,7 @@
         </div>
 
         <!-- Model Card 3 -->
-        <div class="card-boz-white p-6 relative">
+        <div class="card-boz-white p-6 relative bg-white">
           <div class="flex justify-between items-start mb-4">
             <div class="flex items-center gap-2">
               <span class="w-3 h-3 rounded-full bg-emerald-500"></span>
@@ -195,7 +253,7 @@
         </div>
 
         <!-- Model Card 4 -->
-        <div class="card-boz-white p-6 relative">
+        <div class="card-boz-white p-6 relative bg-white">
           <div class="flex justify-between items-start mb-4">
             <div class="flex items-center gap-2">
               <span class="w-3 h-3 rounded-full bg-emerald-500"></span>
@@ -211,7 +269,7 @@
         </div>
 
         <!-- Model Card 5 -->
-        <div class="card-boz-white p-6 relative">
+        <div class="card-boz-white p-6 relative bg-white">
           <div class="flex justify-between items-start mb-4">
             <div class="flex items-center gap-2">
               <span class="w-3 h-3 rounded-full bg-emerald-500"></span>
@@ -241,16 +299,42 @@
     </div>
   </section>
 
-  <!-- 3. DAFTAR 10+ MODEL AI & SPESIFIKASI -->
+  <!-- 3. STATUS CLUSTER & STATS -->
+  <section id="status" class="py-12 sm:py-20 bg-white text-boz-black border-b border-slate-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-6 p-4 sm:p-8 rounded-2xl sm:rounded-3xl bg-slate-50 border border-slate-200 mb-12 sm:mb-16 text-center">
+        <div class="p-2 sm:p-4">
+          <div class="font-display text-xl sm:text-3xl lg:text-4xl font-bold text-boz-black mb-1">9.313</div>
+          <div class="text-[11px] sm:text-xs text-slate-500 font-medium">Cloudflare AI Accounts</div>
+        </div>
+        <div class="p-2 sm:p-4 border-l border-slate-200">
+          <div class="font-display text-xl sm:text-3xl lg:text-4xl font-bold text-boz-blue mb-1">99.9%</div>
+          <div class="text-[11px] sm:text-xs text-slate-500 font-medium">Uptime Guarantee</div>
+        </div>
+        <div class="p-2 sm:p-4 border-l border-slate-200">
+          <div class="font-display text-xl sm:text-3xl lg:text-4xl font-bold text-emerald-600 mb-1">&lt;50ms</div>
+          <div class="text-[11px] sm:text-xs text-slate-500 font-medium">Proxy Overhead</div>
+        </div>
+        <div class="p-2 sm:p-4 border-l border-slate-200">
+          <div class="font-display text-xl sm:text-3xl lg:text-4xl font-bold text-boz-orange mb-1">100%</div>
+          <div class="text-[11px] sm:text-xs text-slate-500 font-medium">OpenAI Compatible</div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- 4. DAFTAR MODEL POOL ROUTER -->
   <section id="model" class="py-12 sm:py-20 bg-slate-50 text-boz-black border-b border-slate-200">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       
       <div class="flex flex-col sm:flex-row sm:items-end justify-between mb-8">
         <div>
           <div class="inline-flex items-center gap-2 text-boz-blue font-bold text-xs tracking-wider uppercase mb-2">
-            <i data-lucide="layers" class="w-4 h-4"></i> KATALOG POOL ROUTER
+            <i data-lucide="layers" class="w-4 h-4"></i> KATALOG MODEL
           </div>
-          <h2 class="font-display text-2xl sm:text-4xl font-bold text-boz-black">5 Clean Models, 1 Universal API</h2>
+          <h2 class="font-display text-2xl sm:text-4xl font-bold text-boz-black">Clean Pool Models, Satu API Key</h2>
         </div>
         <span class="inline-block px-3.5 py-1.5 rounded-full bg-white border border-slate-200 text-xs font-bold text-slate-700 shadow-sm mt-3 sm:mt-0 w-max">
           Akses Instan Tanpa Switching Key
@@ -298,7 +382,7 @@
                   <code>kimi-k2.7</code>
                 </td>
                 <td class="py-3.5 px-4 sm:px-6 text-slate-600 font-mono">262K Tokens</td>
-                <td class="py-3.5 px-4 sm:px-6"><span class="px-2.5 py-0.5 sm:px-3 sm:py-1 rounded-full text-[10px] sm:text-xs font-semibold bg-amber-100 text-amber-800">Aktif • Long Context</span></td>
+                <td class="py-3.5 px-4 sm:px-6"><span class="px-2.5 py-0.5 sm:px-3 sm:py-1 rounded-full text-[10px] sm:text-xs font-semibold bg-amber-100 text-amber-800">Aktif • Fast</span></td>
               </tr>
               <tr class="hover:bg-slate-50 transition-colors">
                 <td class="py-3.5 px-4 sm:px-6 font-bold text-boz-black flex items-center gap-2.5">
@@ -312,10 +396,11 @@
           </table>
         </div>
       </div>
+
     </div>
   </section>
 
-  <!-- 4. IDE SETUP & CONFIG JSON -->
+  <!-- 5. IDE SETUP & CONFIG JSON -->
   <section id="kompatibilitas" class="py-12 sm:py-20 bg-boz-blue text-white">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       
@@ -329,7 +414,6 @@
 
       <!-- Window Frame ala macOS / Cursor IDE -->
       <div class="max-w-4xl mx-auto bg-slate-950 rounded-2xl sm:rounded-3xl border border-slate-800 overflow-hidden shadow-2xl font-mono text-left">
-        <!-- macOS Window Titlebar -->
         <div class="flex items-center justify-between px-4 sm:px-6 py-3 sm:py-4 border-b border-slate-800 bg-slate-900/90">
           <div class="flex items-center gap-2 sm:gap-3 overflow-hidden">
             <div class="flex gap-1.5 shrink-0">
@@ -356,7 +440,7 @@
     </div>
   </section>
 
-  <!-- 5. PRICING SECTION -->
+  <!-- 6. PRICING SECTION -->
   <section id="harga" class="py-12 sm:py-20 bg-boz-blue text-white border-t border-blue-400/30">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       
