@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="id" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bozgravity — Cosmic Terminal Dashboard Preview</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            mono: ['"Fira Code"', 'monospace'],
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+          },
+          colors: {
+            space: {
+              950: '#06070C',
+              900: '#0B0D17',
+              800: '#131728',
+              700: '#1D233D',
+            },
+            cosmic: {
+              purple: '#A855F7',
+              cyan: '#06B6D4',
+              pink: '#EC4899',
+              orange: '#F97316',
+              emerald: '#10B981',
+            }
+          },
+          animation: {
+            'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+            'glow': 'glow 3s ease-in-out infinite alternate',
+          },
+          keyframes: {
+            glow: {
+              '0%': { opacity: '0.4', filter: 'blur(20px)' },
+              '100%': { opacity: '0.8', filter: 'blur(35px)' },
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body {
+      background-color: #06070C;
+      color: #F8FAFC;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      overflow-x: hidden;
+    }
+    
+    /* Cosmic Grid Lines */
+    .cosmic-grid {
+      background-size: 40px 40px;
+      background-image: 
+        linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+    }
+
+    /* Glassmorphism Code Card */
+    .glass-ide {
+      background: rgba(15, 18, 30, 0.65);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    }
+
+    .glass-ide-active {
+      background: rgba(23, 28, 48, 0.85);
+      border: 1px solid rgba(168, 85, 247, 0.3);
+      box-shadow: 0 0 25px rgba(168, 85, 247, 0.15);
+    }
+
+    /* Syntax Highlighting Glow */
+    .token-keyword { color: #F472B6; font-weight: 600; }
+    .token-fn { color: #38BDF8; }
+    .token-string { color: #34D399; }
+    .token-num { color: #FB923C; }
+    .token-comment { color: #64748B; font-style: italic; }
+
+    /* Custom Scrollbar for IDE feel */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: #0B0D17; }
+    ::-webkit-scrollbar-thumb { background: #1D233D; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #334155; }
+  </style>
+</head>
+<body class="min-h-screen relative cosmic-grid selection:bg-cosmic-purple/30 selection:text-white pb-12">
+
+  <!-- COSMIC NEBULA GLOW BACKGROUND -->
+  <div class="fixed top-0 left-1/4 w-[600px] h-[600px] bg-cosmic-purple/15 rounded-full blur-[140px] pointer-events-none animate-pulse-slow"></div>
+  <div class="fixed bottom-10 right-1/4 w-[500px] h-[500px] bg-cosmic-cyan/15 rounded-full blur-[140px] pointer-events-none"></div>
+  <div class="fixed top-1/3 right-10 w-[400px] h-[400px] bg-cosmic-pink/10 rounded-full blur-[120px] pointer-events-none"></div>
+
+  <!-- MACBOOK TOP STATUS BAR / BRAND HEADER -->
+  <header class="sticky top-0 z-50 backdrop-blur-md bg-space-950/80 border-b border-white/5 px-4 py-2.5 flex items-center justify-between">
+    <div class="flex items-center gap-3">
+      <!-- MACBOOK WINDOW BUTTONS -->
+      <div class="flex items-center gap-1.5">
+        <div class="w-3 h-3 rounded-full bg-rose-500/80 hover:bg-rose-500 cursor-pointer shadow-sm shadow-rose-500/50"></div>
+        <div class="w-3 h-3 rounded-full bg-amber-500/80 hover:bg-amber-500 cursor-pointer shadow-sm shadow-amber-500/50"></div>
+        <div class="w-3 h-3 rounded-full bg-emerald-500/80 hover:bg-emerald-500 cursor-pointer shadow-sm shadow-emerald-500/50"></div>
+      </div>
+      <div class="h-4 w-[1px] bg-white/10 mx-1"></div>
+      <!-- BREADCRUMB / IDE TAB -->
+      <div class="flex items-center gap-2 text-xs font-mono text-slate-400">
+        <i data-lucide="terminal" class="w-3.5 h-3.5 text-cosmic-purple"></i>
+        <span>bozgravity</span>
+        <span class="text-slate-600">/</span>
+        <span class="text-slate-200 font-medium flex items-center gap-1">
+          <i data-lucide="file-code-2" class="w-3.5 h-3.5 text-cosmic-cyan"></i>
+          dashboard.config.ts
+        </span>
+      </div>
+    </div>
+
+    <!-- IDE TOP ACTIONS & ACCOUNT PROFILE -->
+    <div class="flex items-center gap-4">
+      <!-- GATEWAY RUNNING BADGE -->
+      <div class="flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-mono">
+        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+        <span>GATEWAY: 9,339 NODES ACTIVE</span>
+      </div>
+
+      <!-- USER PROFILE -->
+      <div class="flex items-center gap-2.5 pl-3 border-l border-white/10">
+        <div class="w-7 h-7 rounded-full bg-gradient-to-tr from-cosmic-purple to-cosmic-cyan p-0.5">
+          <div class="w-full h-full bg-space-900 rounded-full flex items-center justify-center text-xs font-bold text-white">
+            B
+          </div>
+        </div>
+        <span class="text-xs font-mono text-slate-300">d4nnboz@gmail.com</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN COSMIC WORKSPACE -->
+  <main class="max-w-7xl mx-auto px-4 pt-6 space-y-6">
+
+    <!-- HERO IDE BAR & SUMMARY STATS -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+      <!-- STAT 1: ACTIVE MODEL ROUTER -->
+      <div class="glass-ide rounded-xl p-4 relative overflow-hidden group hover:border-cosmic-purple/40 transition-all">
+        <div class="flex items-center justify-between text-slate-400 mb-2">
+          <span class="text-xs font-mono">const ROUTER_POOLS</span>
+          <i data-lucide="cpu" class="w-4 h-4 text-cosmic-purple"></i>
+        </div>
+        <div class="text-2xl font-bold font-mono text-white group-hover:text-cosmic-purple transition-colors">
+          9,339 <span class="text-xs font-normal text-slate-400">Keys</span>
+        </div>
+        <div class="mt-2 text-xs font-mono text-slate-500 flex items-center gap-1">
+          <span class="text-emerald-400">9313 CF</span> • <span class="text-cosmic-purple">14 Meta</span> • <span class="text-cosmic-cyan">12 Ollama</span>
+        </div>
+      </div>
+
+      <!-- STAT 2: SYSTEM SUBSCRIPTION -->
+      <div class="glass-ide rounded-xl p-4 relative overflow-hidden group hover:border-cosmic-cyan/40 transition-all">
+        <div class="flex items-center justify-between text-slate-400 mb-2">
+          <span class="text-xs font-mono">let KEY_STATUS</span>
+          <i data-lucide="key-round" class="w-4 h-4 text-cosmic-cyan"></i>
+        </div>
+        <div class="text-2xl font-bold font-mono text-emerald-400 flex items-center gap-2">
+          <span>ACTIVE</span>
+          <i data-lucide="check-circle-2" class="w-5 h-5 text-emerald-400"></i>
+        </div>
+        <div class="mt-2 text-xs font-mono text-slate-400">
+          TTL Expiry: <span class="text-slate-200 font-bold">23H 59M 42S</span>
+        </div>
+      </div>
+
+      <!-- STAT 3: TOTAL REQUESTS -->
+      <div class="glass-ide rounded-xl p-4 relative overflow-hidden group hover:border-cosmic-pink/40 transition-all">
+        <div class="flex items-center justify-between text-slate-400 mb-2">
+          <span class="text-xs font-mono">export function REQUESTS</span>
+          <i data-lucide="activity" class="w-4 h-4 text-cosmic-pink"></i>
+        </div>
+        <div class="text-2xl font-bold font-mono text-white">
+          142,890 <span class="text-xs font-normal text-slate-400">Reqs</span>
+        </div>
+        <div class="mt-2 text-xs font-mono text-emerald-400 flex items-center gap-1">
+          <i data-lucide="trending-up" class="w-3.5 h-3.5"></i> 99.98% Success Rate
+        </div>
+      </div>
+
+      <!-- STAT 4: LATENCY SPEED -->
+      <div class="glass-ide rounded-xl p-4 relative overflow-hidden group hover:border-cosmic-orange/40 transition-all">
+        <div class="flex items-center justify-between text-slate-400 mb-2">
+          <span class="text-xs font-mono">sys.LATENCY_AVG</span>
+          <i data-lucide="zap" class="w-4 h-4 text-cosmic-orange"></i>
+        </div>
+        <div class="text-2xl font-bold font-mono text-cosmic-orange">
+          42 <span class="text-xs font-normal text-slate-400">ms</span>
+        </div>
+        <div class="mt-2 text-xs font-mono text-slate-500">
+          Global Round-Robin Edge
+        </div>
+      </div>
+    </div>
+
+    <!-- MAIN TWO-COLUMN IDE WORKSPACE -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+
+      <!-- LEFT COLUMN: CODE EDITOR & API KEY MANAGER (8 COLS) -->
+      <div class="lg:col-span-8 space-y-6">
+
+        <!-- MACBOOK IDE WINDOW 1: API KEY & ROUTER CONTROL -->
+        <div class="glass-ide rounded-xl overflow-hidden border border-white/10">
+          <!-- IDE WINDOW TITLEBAR -->
+          <div class="bg-space-900/90 px-4 py-2.5 border-b border-white/10 flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <div class="flex items-center gap-1.5 mr-2">
+                <span class="w-2.5 h-2.5 rounded-full bg-rose-500/80"></span>
+                <span class="w-2.5 h-2.5 rounded-full bg-amber-500/80"></span>
+                <span class="w-2.5 h-2.5 rounded-full bg-emerald-500/80"></span>
+              </div>
+              <span class="text-xs font-mono text-cosmic-purple font-semibold">~/bozgravity/credentials.env</span>
+            </div>
+            <div class="flex items-center gap-2 text-xs font-mono text-slate-400">
+              <span class="px-2 py-0.5 rounded bg-white/5 border border-white/10">UTF-8</span>
+              <span class="px-2 py-0.5 rounded bg-cosmic-purple/20 text-cosmic-purple font-bold">ROUTER: ONLINE</span>
+            </div>
+          </div>
+
+          <!-- IDE CODE BODY -->
+          <div class="p-5 font-mono text-xs space-y-4">
+            <!-- LINE 1: API KEY -->
+            <div class="flex items-start gap-4">
+              <span class="text-slate-600 select-none">01</span>
+              <div class="flex-1 space-y-2">
+                <div class="text-slate-400"><span class="token-comment">// Key Akses Universal Subscriber Bozgravity (Active 24 Hours)</span></div>
+                <div class="flex items-center gap-2 bg-space-950 p-2.5 rounded-lg border border-white/10">
+                  <span class="token-keyword">export const</span>
+                  <span class="token-fn">BOZGRAVITY_KEY</span>
+                  <span class="text-slate-400">=</span>
+                  <span id="apiKeyText" class="token-string flex-1 truncate">sk-boz-d4nnboz59ab2026</span>
+                  <button onclick="copyKey()" class="px-3 py-1 rounded bg-cosmic-purple text-white hover:bg-purple-600 font-bold transition-all flex items-center gap-1 shadow-lg shadow-purple-500/20">
+                    <i data-lucide="copy" class="w-3.5 h-3.5"></i> Copy
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- LINE 2: QUICK GENERATE QRIS -->
+            <div class="flex items-start gap-4 pt-2 border-t border-white/5">
+              <span class="text-slate-600 select-none">02</span>
+              <div class="flex-1 space-y-3">
+                <div class="text-slate-400"><span class="token-comment">// Topup / Perpanjang Masa Aktif Universal Key via Dynamic QRIS (Rp 5.000)</span></div>
+                
+                <div class="flex flex-wrap items-center justify-between gap-3 bg-space-900/80 p-3.5 rounded-lg border border-white/5">
+                  <div>
+                    <div class="text-sm font-bold text-white font-sans flex items-center gap-2">
+                      <span>Harga Langganan: Rp 5.000 / 24 Jam</span>
+                      <span class="text-[10px] px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">Auto-Detect</span>
+                    </div>
+                    <p class="text-slate-400 text-[11px] font-sans mt-0.5">Mendapatkan akses ke 9,339 Router Nodes tanpa limitasi.</p>
+                  </div>
+                  <button onclick="toggleQris()" class="px-4 py-2 rounded-lg bg-gradient-to-r from-cosmic-purple to-cosmic-cyan text-white font-bold hover:opacity-90 transition-all flex items-center gap-2 shadow-lg shadow-cyan-500/20">
+                    <i data-lucide="qr-code" class="w-4 h-4"></i> Generate Dynamic QRIS
+                  </button>
+                </div>
+
+                <!-- QRIS DISPLAY MODAL (CONTAINER) -->
+                <div id="qrisSection" class="hidden bg-space-950 p-4 rounded-xl border border-cosmic-purple/30 space-y-4">
+                  <div class="flex items-center justify-between border-b border-white/10 pb-3">
+                    <div class="flex items-center gap-2">
+                      <span class="w-2 h-2 rounded-full bg-cosmic-purple animate-ping"></span>
+                      <span class="font-bold text-white">QRIS DYNAMIC SHOPEEPAY</span>
+                    </div>
+                    <div class="text-slate-400 text-xs">
+                      Timer: <span class="text-cosmic-orange font-bold font-mono">09:58</span>
+                    </div>
+                  </div>
+
+                  <div class="flex flex-col sm:flex-row items-center gap-5">
+                    <div class="bg-white p-3 rounded-xl shadow-2xl border border-white/20 shrink-0">
+                      <!-- QR Placeholder -->
+                      <img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=00020101021126610016ID.CO.SHOPEE.WWW" class="w-40 h-40 object-contain" alt="QRIS">
+                    </div>
+                    <div class="space-y-2 text-center sm:text-left">
+                      <div class="text-xs text-slate-400">Total Nominal Pembayaran Unik:</div>
+                      <div class="text-3xl font-extrabold text-cosmic-cyan font-mono tracking-tight">Rp 5.048</div>
+                      <p class="text-[11px] text-amber-300/90 font-sans leading-relaxed bg-amber-500/10 p-2.5 rounded-lg border border-amber-500/20">
+                        ⚠️ Transfer <b>HARUS PERSIS Rp 5.048</b> (Termasuk 2 angka unik di belakang) agar sistem auto-detection mengenali transaksi Anda secara otomatis!
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+            <!-- LINE 3: CURL CODE SNIPPET PREVIEW -->
+            <div class="flex items-start gap-4 pt-2 border-t border-white/5">
+              <span class="text-slate-600 select-none">03</span>
+              <div class="flex-1 space-y-2">
+                <div class="text-slate-400"><span class="token-comment">// Integrasi Endpoint OpenAI Compatible SDK</span></div>
+                <div class="bg-space-950 p-3 rounded-lg border border-white/10 overflow-x-auto text-[11px]">
+<pre class="text-slate-300"><span class="token-keyword">curl</span> https://api.bozgravity.web.id/v1/chat/completions \
+  <span class="token-fn">-H</span> <span class="token-string">"Authorization: Bearer sk-boz-d4nnboz59ab2026"</span> \
+  <span class="token-fn">-H</span> <span class="token-string">"Content-Type: application/json"</span> \
+  <span class="token-fn">-d</span> <span class="token-string">'{
+    "model": "deepseek-r1",
+    "messages": [{"role": "user", "content": "Hello Cosmic Router!"}]
+  }'</span></pre>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- MACBOOK IDE WINDOW 2: LIVE TERMINAL LOGS FEED -->
+        <div class="glass-ide rounded-xl overflow-hidden border border-white/10">
+          <div class="bg-space-900/90 px-4 py-2 border-b border-white/10 flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <i data-lucide="terminal-square" class="w-4 h-4 text-cosmic-cyan"></i>
+              <span class="text-xs font-mono text-slate-300 font-semibold">sys.live_stream.log</span>
+            </div>
+            <div class="text-[11px] font-mono text-slate-500">Auto-refresh: 2s</div>
+          </div>
+          <div class="p-4 font-mono text-[11px] space-y-2 bg-space-950/90 max-h-60 overflow-y-auto">
+            <div class="flex items-center gap-3 text-slate-400">
+              <span class="text-slate-600">21:40:02</span>
+              <span class="text-emerald-400 font-bold">[200 OK]</span>
+              <span class="text-cosmic-purple">deepseek-r1</span>
+              <span class="text-slate-500">→ Rotated to Node CF #4218</span>
+              <span class="ml-auto text-slate-500">38ms</span>
+            </div>
+            <div class="flex items-center gap-3 text-slate-400">
+              <span class="text-slate-600">21:39:58</span>
+              <span class="text-emerald-400 font-bold">[200 OK]</span>
+              <span class="text-cosmic-cyan">muse-spark-1.1</span>
+              <span class="text-slate-500">→ Rotated to Meta Key #9</span>
+              <span class="ml-auto text-slate-500">54ms</span>
+            </div>
+            <div class="flex items-center gap-3 text-slate-400">
+              <span class="text-slate-600">21:39:41</span>
+              <span class="text-emerald-400 font-bold">[200 OK]</span>
+              <span class="text-cosmic-pink">minimax-m3</span>
+              <span class="text-slate-500">→ Rotated to Ollama Node #4</span>
+              <span class="ml-auto text-slate-500">41ms</span>
+            </div>
+            <div class="flex items-center gap-3 text-slate-400">
+              <span class="text-slate-600">21:39:15</span>
+              <span class="text-emerald-400 font-bold">[200 OK]</span>
+              <span class="text-cosmic-purple">deepseek-r1</span>
+              <span class="text-slate-500">→ Rotated to Node CF #4217</span>
+              <span class="ml-auto text-slate-500">36ms</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- RIGHT COLUMN: MODEL POOLS & COSMIC CATALOG (4 COLS) -->
+      <div class="lg:col-span-4 space-y-6">
+
+        <!-- COSMIC MODEL POOLS LIST -->
+        <div class="glass-ide rounded-xl p-5 border border-white/10 space-y-4">
+          <div class="flex items-center justify-between border-b border-white/10 pb-3">
+            <div class="flex items-center gap-2 font-mono text-xs font-bold text-white">
+              <i data-lucide="layers" class="w-4 h-4 text-cosmic-purple"></i>
+              <span>MODEL_ROUTER_POOLS</span>
+            </div>
+            <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-cosmic-purple/20 text-cosmic-purple border border-cosmic-purple/30">
+              Round-Robin
+            </span>
+          </div>
+
+          <!-- MODEL ITEM 1 -->
+          <div class="glass-ide-active p-3.5 rounded-lg border space-y-2">
+            <div class="flex items-center justify-between">
+              <span class="font-mono text-xs font-bold text-white flex items-center gap-1.5">
+                <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+                deepseek-r1
+              </span>
+              <span class="text-[10px] font-mono px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-400">9,313 Nodes</span>
+            </div>
+            <p class="text-[11px] text-slate-400 font-sans leading-tight">DeepSeek R1 High Reasoning Engine via Cloudflare AI Edge Pool.</p>
+          </div>
+
+          <!-- MODEL ITEM 2 -->
+          <div class="p-3.5 rounded-lg bg-space-950/60 border border-white/5 space-y-2 hover:border-white/20 transition-all">
+            <div class="flex items-center justify-between">
+              <span class="font-mono text-xs font-bold text-slate-200 flex items-center gap-1.5">
+                <span class="w-2 h-2 rounded-full bg-cosmic-purple"></span>
+                muse-spark-1.1
+              </span>
+              <span class="text-[10px] font-mono px-1.5 py-0.5 rounded bg-cosmic-purple/20 text-cosmic-purple">14 Meta Keys</span>
+            </div>
+            <p class="text-[11px] text-slate-400 font-sans leading-tight">Meta AI Muse Spark Ultra High Context Generation.</p>
+          </div>
+
+          <!-- MODEL ITEM 3 -->
+          <div class="p-3.5 rounded-lg bg-space-950/60 border border-white/5 space-y-2 hover:border-white/20 transition-all">
+            <div class="flex items-center justify-between">
+              <span class="font-mono text-xs font-bold text-slate-200 flex items-center gap-1.5">
+                <span class="w-2 h-2 rounded-full bg-cosmic-cyan"></span>
+                minimax-m3
+              </span>
+              <span class="text-[10px] font-mono px-1.5 py-0.5 rounded bg-cosmic-cyan/20 text-cosmic-cyan">12 Ollama Nodes</span>
+            </div>
+            <p class="text-[11px] text-slate-400 font-sans leading-tight">MiniMax M3 Ultra Fast Multi-Agent Model Engine.</p>
+          </div>
+
+          <!-- MODEL ITEM 4 -->
+          <div class="p-3.5 rounded-lg bg-space-950/60 border border-white/5 space-y-2 hover:border-white/20 transition-all">
+            <div class="flex items-center justify-between">
+              <span class="font-mono text-xs font-bold text-slate-200 flex items-center gap-1.5">
+                <span class="w-2 h-2 rounded-full bg-cosmic-orange"></span>
+                kimi-k2.7
+              </span>
+              <span class="text-[10px] font-mono px-1.5 py-0.5 rounded bg-cosmic-orange/20 text-cosmic-orange">Fast Router</span>
+            </div>
+            <p class="text-[11px] text-slate-400 font-sans leading-tight">Moonshot Kimi K2.7 Long Context Assistant.</p>
+          </div>
+        </div>
+
+        <!-- QUICK HELP & SUPPORT CARD -->
+        <div class="glass-ide rounded-xl p-5 border border-white/10 space-y-3">
+          <div class="flex items-center gap-2 text-xs font-mono font-bold text-cosmic-cyan">
+            <i data-lucide="sparkles" class="w-4 h-4"></i>
+            <span>COSMIC INFRASTRUCTURE</span>
+          </div>
+          <p class="text-xs text-slate-400 font-sans leading-relaxed">
+            Semua request AI di-route secara otomatis melalui jaringan Edge Load Balancer 9339 node yang terisolasi dan ultra-fast.
+          </p>
+        </div>
+
+      </div>
+
+    </div>
+
+  </main>
+
+  <script>
+    lucide.createIcons();
+
+    function copyKey() {
+      const text = document.getElementById('apiKeyText').innerText;
+      navigator.clipboard.writeText(text);
+      alert('API Key copied to clipboard!');
+    }
+
+    function toggleQris() {
+      const el = document.getElementById('qrisSection');
+      el.classList.toggle('hidden');
+    }
+  </script>
+</body>
+</html>
