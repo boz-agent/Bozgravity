@@ -81,7 +81,7 @@
         <h1 class="text-2xl sm:text-3xl font-bold tracking-tight text-boz-black">
           Developer <span class="text-boz-blue">Portal</span>
         </h1>
-        <p class="text-sm text-slate-500 mt-1">Kelola API Key, pantau kuota harian, dan analisis diagram penggunaan model Anda.</p>
+        <p class="text-sm text-slate-500 mt-1">Kelola API Key, pantau kuota harian, dan lacak request terkini khusus akun Anda.</p>
       </div>
       <div class="flex items-center gap-2">
         <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 text-xs font-semibold">
@@ -93,7 +93,7 @@
 
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
       
-      <!-- Left Column: Key, Charts & Usage -->
+      <!-- Left Column: Key, Charts & User Log Table -->
       <div class="lg:col-span-2 space-y-6">
         
         <!-- API Key Card -->
@@ -132,76 +132,38 @@
           </div>
         </div>
 
-        <!-- DIAGRAM PENGGUNAAN MODEL (ANALYTICS CHART) -->
-        <div class="card-boz-white p-6 bg-white space-y-6">
-          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 pb-4">
+        <!-- 9ROUTER-STYLE USER RECENT REQUESTS TABLE (KHUSUS USER LOGIN) -->
+        <div class="card-boz-white p-6 bg-white space-y-4">
+          <div class="flex items-center justify-between border-b border-slate-100 pb-3">
             <div>
               <h3 class="text-base font-bold text-boz-black flex items-center gap-2">
-                <i data-lucide="bar-chart-3" class="w-5 h-5 text-boz-orange"></i> Diagram Penggunaan Model AI
+                <i data-lucide="clock" class="w-5 h-5 text-boz-orange"></i> RECENT REQUESTS (AKUN ANDA)
               </h3>
-              <p class="text-xs text-slate-500 mt-1">Distribusi panggil model & estimasi token penggunaan Anda dalam 24 jam terakhir.</p>
+              <p class="text-xs text-slate-500 mt-0.5">Riwayat transaksi request khusus key <code class="text-boz-orange font-bold font-mono">sk-boz-*</code> Anda.</p>
             </div>
-            <span class="text-xs bg-orange-50 text-boz-orange font-bold px-3 py-1 rounded-full border border-orange-200 w-max">
-              Total Request: 1.482 Req
+            <span class="text-[10px] font-mono font-bold bg-emerald-50 text-emerald-700 px-2.5 py-1 rounded-full border border-emerald-200">
+              LIVE SYNC
             </span>
           </div>
 
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
-            <!-- Doughnut Chart: Model Distribution -->
-            <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 flex flex-col items-center">
-              <span class="text-xs font-bold text-slate-700 mb-3">Distribusi Model Pilihan</span>
-              <div class="w-48 h-48 relative">
-                <canvas id="modelDoughnutChart"></canvas>
-              </div>
+          <!-- Dark 9Router Style Container -->
+          <div class="bg-slate-950 rounded-2xl border border-slate-800 shadow-xl overflow-hidden font-mono text-xs">
+            <div class="overflow-x-auto">
+              <table class="w-full text-left border-collapse min-w-[500px]">
+                <thead>
+                  <tr class="bg-slate-900 border-b border-slate-800 text-[11px] font-bold text-slate-400 uppercase tracking-wider">
+                    <th class="py-3 px-4">Model</th>
+                    <th class="py-3 px-4 text-center">In / Out</th>
+                    <th class="py-3 px-4 text-right">When</th>
+                  </tr>
+                </thead>
+                <tbody id="userRequestsBody" class="divide-y divide-slate-800/60 text-slate-200">
+                  <tr>
+                    <td colspan="3" class="py-6 text-center text-slate-500">Memuat transaksi request Anda...</td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
-
-            <!-- Bar Chart: Hourly Usage -->
-            <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 flex flex-col items-center">
-              <span class="text-xs font-bold text-slate-700 mb-3">Traffic Request Per Jam</span>
-              <div class="w-full h-48 relative">
-                <canvas id="usageBarChart"></canvas>
-              </div>
-            </div>
-          </div>
-
-          <!-- Breakdown Table Usage -->
-          <div class="overflow-x-auto border border-slate-200 rounded-xl">
-            <table class="w-full text-left text-xs">
-              <thead class="bg-slate-100 text-slate-700 font-bold uppercase border-b border-slate-200">
-                <tr>
-                  <th class="p-3">Nama Model</th>
-                  <th class="p-3">Total Calls</th>
-                  <th class="p-3">Avg Latency</th>
-                  <th class="p-3">Status</th>
-                </tr>
-              </thead>
-              <tbody class="divide-y divide-slate-100 text-slate-700 font-medium">
-                <tr>
-                  <td class="p-3 font-bold text-boz-black">minimax-m3</td>
-                  <td class="p-3 font-mono">620 calls (42%)</td>
-                  <td class="p-3 font-mono text-emerald-600 font-bold">120ms</td>
-                  <td class="p-3"><span class="text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200 text-[10px] font-bold">OPTIMAL</span></td>
-                </tr>
-                <tr>
-                  <td class="p-3 font-bold text-boz-black">deepseek-r1</td>
-                  <td class="p-3 font-mono">410 calls (28%)</td>
-                  <td class="p-3 font-mono text-emerald-600 font-bold">280ms</td>
-                  <td class="p-3"><span class="text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200 text-[10px] font-bold">OPTIMAL</span></td>
-                </tr>
-                <tr>
-                  <td class="p-3 font-bold text-boz-black">muse-spark-1.1</td>
-                  <td class="p-3 font-mono">290 calls (20%)</td>
-                  <td class="p-3 font-mono text-emerald-600 font-bold">180ms</td>
-                  <td class="p-3"><span class="text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200 text-[10px] font-bold">OPTIMAL</span></td>
-                </tr>
-                <tr>
-                  <td class="p-3 font-bold text-boz-black">kimi-k2.7 / deepseek-v4-flash</td>
-                  <td class="p-3 font-mono">162 calls (10%)</td>
-                  <td class="p-3 font-mono text-emerald-600 font-bold">95ms</td>
-                  <td class="p-3"><span class="text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200 text-[10px] font-bold">OPTIMAL</span></td>
-                </tr>
-              </tbody>
-            </table>
           </div>
         </div>
 
@@ -282,6 +244,8 @@
   <script>
     lucide.createIcons();
 
+    let currentKey = 'sk-boz-retail-24h-active-fullpool-v1';
+
     // Check user session
     const userSession = JSON.parse(localStorage.getItem('boz_user') || '{}');
     if (!userSession.email) {
@@ -291,10 +255,7 @@
       document.getElementById('accountEmail').innerText = userSession.email;
       if (userSession.picture) document.getElementById('userAvatar').src = userSession.picture;
       
-      // Force active master key sk-boz-* from 9Router DB Pool
-      const validKey = 'sk-boz-retail-24h-active-fullpool-v1';
-      localStorage.setItem('boz_key', validKey);
-      let currentKey = validKey;
+      localStorage.setItem('boz_key', currentKey);
       
       // Setup dynamic 24H Countdown Timer
       let expireTime = localStorage.getItem('boz_key_expires');
@@ -322,58 +283,48 @@
       document.getElementById('apiKeyDisplay').innerText = currentKey;
       document.getElementById('snippetKey').innerText = currentKey;
 
-      // Render Chart.js Model Usage Diagrams
-      renderCharts();
+      // Fetch User Specific Recent Requests Real-time
+      fetchUserRecentRequests();
+      setInterval(fetchUserRecentRequests, 3000);
     }
 
-    function renderCharts() {
-      // 1. Doughnut Chart: Model Distribution
-      const ctxDoughnut = document.getElementById('modelDoughnutChart').getContext('2d');
-      new Chart(ctxDoughnut, {
-        type: 'doughnut',
-        data: {
-          labels: ['minimax-m3', 'deepseek-r1', 'muse-spark-1.1', 'Lainnya'],
-          datasets: [{
-            data: [42, 28, 20, 10],
-            backgroundColor: ['#FF601C', '#077BF4', '#10B981', '#64748B'],
-            borderWidth: 2,
-            borderColor: '#ffffff'
-          }]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: {
-            legend: { display: false }
-          }
+    async function fetchUserRecentRequests() {
+      try {
+        const res = await fetch(`https://api.bozagent.my.id/api/requests/user?key=${encodeURIComponent(currentKey)}`);
+        const json = await res.json();
+        if (json && json.data) {
+          renderUserRecentTable('userRequestsBody', json.data);
         }
-      });
+      } catch (e) {}
+    }
 
-      // 2. Bar Chart: Hourly Usage Traffic
-      const ctxBar = document.getElementById('usageBarChart').getContext('2d');
-      new Chart(ctxBar, {
-        type: 'bar',
-        data: {
-          labels: ['04:00', '08:00', '12:00', '16:00', '20:00', '00:00'],
-          datasets: [{
-            label: 'Request',
-            data: [120, 310, 450, 280, 520, 190],
-            backgroundColor: '#077BF4',
-            borderRadius: 6
-          }]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: {
-            legend: { display: false }
-          },
-          scales: {
-            x: { grid: { display: false } },
-            y: { grid: { color: '#f1f5f9' }, ticks: { font: { size: 10 } } }
-          }
-        }
+    function renderUserRecentTable(targetId, data) {
+      const tbody = document.getElementById(targetId);
+      if (!tbody) return;
+
+      if (!data || data.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="3" class="py-4 text-center text-slate-500">Belum ada transaksi request untuk key Anda.</td></tr>';
+        return;
+      }
+
+      let html = '';
+      data.forEach(item => {
+        html += `
+          <tr class="hover:bg-slate-900/60 transition-colors">
+            <td class="py-2.5 px-4 font-bold flex items-center gap-2">
+              <span class="w-2 h-2 rounded-full bg-emerald-400 shrink-0"></span>
+              <span class="text-white">${item.model}</span>
+            </td>
+            <td class="py-2.5 px-4 text-center font-mono">
+              <span class="text-rose-400">${item.promptTokens.toLocaleString()}↑</span>
+              <span class="text-slate-500 mx-1">/</span>
+              <span class="text-emerald-400">${item.completionTokens.toLocaleString()}↓</span>
+            </td>
+            <td class="py-2.5 px-4 text-right text-slate-400 font-mono">${item.when}</td>
+          </tr>
+        `;
       });
+      tbody.innerHTML = html;
     }
 
     function copyApiKey() {

@@ -57,7 +57,7 @@
 
       <!-- Navigation Links (Desktop) -->
       <nav class="hidden lg:flex items-center gap-8 text-sm font-medium text-slate-700">
-        <a href="#live-status" class="hover:text-boz-blue transition-colors">Live Monitor</a>
+        <a href="#live-status" class="hover:text-boz-blue transition-colors">Live Feed</a>
         <a href="#model" class="hover:text-boz-blue transition-colors">Katalog Model</a>
         <a href="#harga" class="hover:text-boz-blue transition-colors">Harga Retail</a>
         <a href="#kompatibilitas" class="hover:text-boz-blue transition-colors">Integrasi SDK</a>
@@ -65,7 +65,6 @@
 
       <!-- Action Buttons -->
       <div class="flex items-center gap-1.5 sm:gap-3">
-        <!-- Render Google Button Container -->
         <div id="googleBtnNav"></div>
 
         <a href="#harga" class="inline-flex items-center gap-1.5 sm:gap-2 px-3 sm:px-5 py-1.5 sm:py-2 rounded-full bg-boz-blue text-white font-semibold text-xs sm:text-sm hover:bg-blue-600 transition-all shadow-md shrink-0">
@@ -76,7 +75,7 @@
     </div>
   </header>
 
-  <!-- 1. HERO SECTION (ORIGINAL FULL VERSION) -->
+  <!-- 1. HERO SECTION -->
   <section class="hero-google relative pt-8 pb-16 sm:pt-16 sm:pb-24 overflow-hidden border-b border-slate-100">
     <canvas id="antigravityHeroCanvas" class="absolute inset-0 w-full h-full z-10 opacity-70"></canvas>
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-20 text-center">
@@ -163,117 +162,45 @@
     </div>
   </section>
 
-  <!-- 2. PUBLIK LIVE MODEL MONITOR (HALAMAN DEPAN) -->
-  <section id="live-status" class="py-12 sm:py-16 bg-slate-50 border-b border-slate-200">
+  <!-- 2. PUBLIK REALTIME RECENT REQUESTS TABLE (ALA 9ROUTER - HALAMAN UTAMA) -->
+  <section id="live-status" class="py-12 sm:py-16 bg-slate-900 text-white border-b border-slate-800">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
+      
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
         <div>
-          <div class="inline-flex items-center gap-2 text-emerald-600 font-bold text-xs tracking-wider uppercase mb-2">
+          <div class="inline-flex items-center gap-2 text-emerald-400 font-bold text-xs tracking-wider uppercase mb-1">
             <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
-            REALTIME PUBLIC MODEL MONITOR
+            LIVE STREAM FEED
           </div>
-          <h2 class="font-display text-2xl sm:text-4xl font-bold text-boz-black">Model Active Pool & Health Status</h2>
+          <h2 class="font-display text-xl sm:text-3xl font-bold text-white flex items-center gap-2">
+            <i data-lucide="activity" class="w-6 h-6 text-boz-orange"></i> RECENT REQUESTS (SEMUA USER)
+          </h2>
         </div>
-        <div class="flex items-center gap-3 text-xs text-slate-500 font-medium">
-          <span class="bg-white px-3 py-1.5 rounded-full border border-slate-200 shadow-sm">Endpoint: <code class="text-boz-blue font-bold">api.bozagent.my.id</code></span>
-          <span class="bg-emerald-50 text-emerald-700 px-3 py-1.5 rounded-full border border-emerald-200 font-semibold">Gateway: 100% ONLINE</span>
+        <div class="flex items-center gap-2 text-xs font-mono text-slate-400 bg-slate-800/80 px-3 py-1.5 rounded-full border border-slate-700">
+          <span>Auto Refresh: <span class="text-emerald-400 font-bold">Real-time</span></span>
+        </div>
+      </div>
+
+      <!-- 9Router Style Request Log Table -->
+      <div class="bg-slate-950 rounded-2xl border border-slate-800 shadow-2xl overflow-hidden font-mono text-xs">
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse min-w-[600px]">
+            <thead>
+              <tr class="bg-slate-900/90 border-b border-slate-800 text-[11px] font-bold text-slate-400 uppercase tracking-wider">
+                <th class="py-3 px-4">Model</th>
+                <th class="py-3 px-4 text-center">In / Out Tokens</th>
+                <th class="py-3 px-4 text-right">When</th>
+              </tr>
+            </thead>
+            <tbody id="publicRequestsBody" class="divide-y divide-slate-800/60 text-slate-200">
+              <tr>
+                <td colspan="3" class="py-6 text-center text-slate-500">Memuat transaksi real-time 9Router...</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </div>
 
-      <!-- Grid Cards Live Models -->
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="liveModelGrid">
-        <!-- Model Card 1 -->
-        <div class="card-boz-white p-6 relative bg-white">
-          <div class="flex justify-between items-start mb-4">
-            <div class="flex items-center gap-2">
-              <span class="w-3 h-3 rounded-full bg-emerald-500"></span>
-              <h3 class="font-bold text-base text-boz-black">minimax-m3</h3>
-            </div>
-            <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-emerald-50 text-emerald-700 border border-emerald-200">HIGH SPEED</span>
-          </div>
-          <p class="text-xs text-slate-500 mb-4">Model reasoning & creative writing kecepatan tinggi dengan latency ultra-rendah.</p>
-          <div class="flex justify-between items-center text-xs border-t border-slate-100 pt-3 text-slate-600">
-            <span>Routing Pool: <strong class="text-boz-black">Ollama Cluster</strong></span>
-            <span class="font-mono text-emerald-600 font-bold">Latency: ~120ms</span>
-          </div>
-        </div>
-
-        <!-- Model Card 2 -->
-        <div class="card-boz-white p-6 relative bg-white">
-          <div class="flex justify-between items-start mb-4">
-            <div class="flex items-center gap-2">
-              <span class="w-3 h-3 rounded-full bg-emerald-500"></span>
-              <h3 class="font-bold text-base text-boz-black">deepseek-r1</h3>
-            </div>
-            <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-purple-50 text-purple-700 border border-purple-200">REASONING</span>
-          </div>
-          <p class="text-xs text-slate-500 mb-4">Model penalaran matematika & coding kompleks via 9.313 Cloudflare AI Farm.</p>
-          <div class="flex justify-between items-center text-xs border-t border-slate-100 pt-3 text-slate-600">
-            <span>Routing Pool: <strong class="text-boz-black">9.313 CF AI Nodes</strong></span>
-            <span class="font-mono text-emerald-600 font-bold">Latency: ~280ms</span>
-          </div>
-        </div>
-
-        <!-- Model Card 3 -->
-        <div class="card-boz-white p-6 relative bg-white">
-          <div class="flex justify-between items-start mb-4">
-            <div class="flex items-center gap-2">
-              <span class="w-3 h-3 rounded-full bg-emerald-500"></span>
-              <h3 class="font-bold text-base text-boz-black">muse-spark-1.1</h3>
-            </div>
-            <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-blue-50 text-blue-700 border border-blue-200">DEFAULT CHAT</span>
-          </div>
-          <p class="text-xs text-slate-500 mb-4">Model percakapan umum & agen pintar dengan failover otomatis ke 14 Meta AI Key.</p>
-          <div class="flex justify-between items-center text-xs border-t border-slate-100 pt-3 text-slate-600">
-            <span>Routing Pool: <strong class="text-boz-black">14 Meta Keys</strong></span>
-            <span class="font-mono text-emerald-600 font-bold">Latency: ~180ms</span>
-          </div>
-        </div>
-
-        <!-- Model Card 4 -->
-        <div class="card-boz-white p-6 relative bg-white">
-          <div class="flex justify-between items-start mb-4">
-            <div class="flex items-center gap-2">
-              <span class="w-3 h-3 rounded-full bg-emerald-500"></span>
-              <h3 class="font-bold text-base text-boz-black">kimi-k2.7</h3>
-            </div>
-            <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-amber-50 text-amber-700 border border-amber-200">LONG CONTEXT</span>
-          </div>
-          <p class="text-xs text-slate-500 mb-4">Model analisis dokumen panjang & riset mendalam hingga 256K token context window.</p>
-          <div class="flex justify-between items-center text-xs border-t border-slate-100 pt-3 text-slate-600">
-            <span>Routing Pool: <strong class="text-boz-black">Kimchi Enabler</strong></span>
-            <span class="font-mono text-emerald-600 font-bold">Latency: ~210ms</span>
-          </div>
-        </div>
-
-        <!-- Model Card 5 -->
-        <div class="card-boz-white p-6 relative bg-white">
-          <div class="flex justify-between items-start mb-4">
-            <div class="flex items-center gap-2">
-              <span class="w-3 h-3 rounded-full bg-emerald-500"></span>
-              <h3 class="font-bold text-base text-boz-black">deepseek-v4-flash</h3>
-            </div>
-            <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-emerald-50 text-emerald-700 border border-emerald-200">ULTRA FAST</span>
-          </div>
-          <p class="text-xs text-slate-500 mb-4">Model generasi cepat untuk autocomplete code & respon kilat.</p>
-          <div class="flex justify-between items-center text-xs border-t border-slate-100 pt-3 text-slate-600">
-            <span>Routing Pool: <strong class="text-boz-black">Kimchi Enabler</strong></span>
-            <span class="font-mono text-emerald-600 font-bold">Latency: ~95ms</span>
-          </div>
-        </div>
-
-        <!-- Callout Box -->
-        <div class="card-boz-white p-6 relative bg-gradient-to-br from-blue-50 to-white flex flex-col justify-between border-blue-200">
-          <div>
-            <div class="text-boz-blue font-bold text-xs uppercase mb-2">Auto-Import Supported</div>
-            <h3 class="font-bold text-base text-boz-black mb-2">Impor Otomatis ke 9Router</h3>
-            <p class="text-xs text-slate-600 leading-relaxed">Colokkan key <code class="text-boz-orange font-bold font-mono">sk-boz-*</code> Anda lalu klik tombol <strong>"Import from /models"</strong> di 9Router UI. Seluruh model di atas akan langsung terdeteksi otomatis!</p>
-          </div>
-          <a href="#harga" class="mt-4 text-xs font-bold text-boz-blue flex items-center gap-1 hover:underline">
-            Dapatkan Key Sekarang <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
-          </a>
-        </div>
-      </div>
     </div>
   </section>
 
@@ -530,7 +457,6 @@
           auto_select: false
         });
 
-        // Render official buttons into DOM elements
         const navTarget = document.getElementById('googleBtnNav');
         if (navTarget) {
           google.accounts.id.renderButton(navTarget, {
@@ -555,7 +481,50 @@
           });
         }
       }
+      
+      // Fetch Public Recent Requests Real-time
+      fetchPublicRecentRequests();
+      setInterval(fetchPublicRecentRequests, 3000);
     };
+
+    async function fetchPublicRecentRequests() {
+      try {
+        const res = await fetch('https://api.bozagent.my.id/api/requests/public');
+        const json = await res.json();
+        if (json && json.data) {
+          renderRecentTable('publicRequestsBody', json.data);
+        }
+      } catch (e) {}
+    }
+
+    function renderRecentTable(targetId, data) {
+      const tbody = document.getElementById(targetId);
+      if (!tbody) return;
+
+      if (!data || data.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="3" class="py-4 text-center text-slate-500">Belum ada transaksi request recorded.</td></tr>';
+        return;
+      }
+
+      let html = '';
+      data.forEach(item => {
+        html += `
+          <tr class="hover:bg-slate-900/60 transition-colors">
+            <td class="py-2.5 px-4 font-bold flex items-center gap-2">
+              <span class="w-2 h-2 rounded-full bg-emerald-400 shrink-0"></span>
+              <span class="text-white">${item.model}</span>
+            </td>
+            <td class="py-2.5 px-4 text-center font-mono">
+              <span class="text-rose-400">${item.promptTokens.toLocaleString()}↑</span>
+              <span class="text-slate-500 mx-1">/</span>
+              <span class="text-emerald-400">${item.completionTokens.toLocaleString()}↓</span>
+            </td>
+            <td class="py-2.5 px-4 text-right text-slate-400 font-mono">${item.when}</td>
+          </tr>
+        `;
+      });
+      tbody.innerHTML = html;
+    }
 
     function triggerGoogleOneTap() {
       const user = localStorage.getItem('boz_user');
