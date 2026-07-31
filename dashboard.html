@@ -351,7 +351,9 @@
       if (!stored) return;
       try {
         const data = JSON.parse(stored);
-        if (data.expires_at && Date.now() < data.expires_at) {
+        const expiresAtNum = typeof data.expires_at === 'number' ? data.expires_at : new Date(data.expires_at).getTime();
+
+        if (expiresAtNum && Date.now() < expiresAtNum) {
           const container = document.getElementById('qrisContainer');
           const img = document.getElementById('qrisImage');
           const displayAmt = document.getElementById('uniqueAmountDisplay');
@@ -361,7 +363,7 @@
           container.classList.remove('hidden');
           lucide.createIcons();
 
-          startQr10MinTimer(data.expires_at);
+          startQr10MinTimer(expiresAtNum);
           startPaymentPolling(data.total_amount);
         } else {
           localStorage.removeItem('boz_pending_qris');
@@ -395,15 +397,17 @@
           container.classList.remove('hidden');
           lucide.createIcons();
 
+          const expiresMs = typeof json.data.expires_at === 'number' ? json.data.expires_at : new Date(json.data.expires_at).getTime();
+
           // PERSIST IN LOCALSTORAGE (SURVIVES REFRESH)
           localStorage.setItem('boz_pending_qris', JSON.stringify({
             qris_url: json.data.qris_url,
             total_amount: json.data.total_amount,
             created_at: json.data.created_at,
-            expires_at: json.data.expires_at
+            expires_at: expiresMs
           }));
 
-          startQr10MinTimer(json.data.expires_at);
+          startQr10MinTimer(expiresMs);
           startPaymentPolling(json.data.total_amount);
         } else {
           alert('Gagal membuat QRIS: ' + (json.message || 'Error server'));
