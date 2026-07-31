@@ -127,7 +127,6 @@
             </span>
           </div>
 
-          <!-- Dark 9Router Style Container -->
           <div class="bg-slate-950 rounded-2xl border border-slate-800 shadow-xl overflow-hidden font-mono text-xs">
             <div class="overflow-x-auto">
               <table class="w-full text-left border-collapse min-w-[500px]">
@@ -184,23 +183,37 @@
           <div class="bg-white p-4 rounded-2xl border border-slate-200 text-center space-y-3 mb-4 shadow-sm">
             <span class="text-xs text-slate-500 block font-medium">Paket Retail Harian</span>
             <span class="text-3xl font-extrabold text-boz-black">Rp 5.000 <span class="text-xs font-normal text-slate-400">/ 24 Jam</span></span>
-            <button onclick="generateQRIS(this)" class="w-full bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white font-bold py-3 rounded-xl text-xs flex items-center justify-center gap-2 shadow-md shadow-orange-500/20 transition-all">
+            <button id="generateBtn" onclick="generateQRIS(this)" class="w-full bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white font-bold py-3 rounded-xl text-xs flex items-center justify-center gap-2 shadow-md shadow-orange-500/20 transition-all">
               <i data-lucide="credit-card" class="w-4 h-4"></i> Generate QRIS Kode Unik
             </button>
           </div>
 
-          <div id="qrisContainer" class="hidden text-center space-y-3 p-4 bg-white rounded-xl border border-slate-200 shadow-sm">
+          <div id="qrisContainer" class="hidden text-center space-y-3 p-4 bg-white rounded-xl border border-slate-200 shadow-sm relative">
+            <div id="qrExpiredOverlay" class="hidden absolute inset-0 bg-white/95 backdrop-blur-sm rounded-xl flex flex-col items-center justify-center p-4 z-10 space-y-2">
+              <i data-lucide="clock-alert" class="w-8 h-8 text-rose-500"></i>
+              <span class="text-xs font-bold text-slate-800">QR Code Expired (10 Menit)</span>
+              <span class="text-[10px] text-slate-500">Silakan generate QRIS baru untuk mendapatkan kode unik terbaru.</span>
+              <button onclick="generateQRIS(document.getElementById('generateBtn'))" class="bg-boz-orange text-white text-xs font-bold px-3 py-1.5 rounded-lg shadow-sm">
+                Generate QRIS Baru
+              </button>
+            </div>
+
             <img id="qrisImage" src="" class="mx-auto w-48 h-48 border border-slate-200 rounded-lg p-2 bg-white" alt="QRIS">
             
             <div class="bg-amber-50 border border-amber-200 p-2.5 rounded-lg text-xs space-y-1">
               <span class="text-slate-500 block font-medium">Total Tagihan (Termasuk Kode Unik):</span>
               <span id="uniqueAmountDisplay" class="text-lg font-extrabold text-boz-orange font-mono">Rp 5.000</span>
-              <span class="text-[10px] text-amber-700 block italic">⚠️ Pastikan bayar sesuai nominal di atas agar otomatis terverifikasi!</span>
+              <span class="text-[10px] text-amber-700 block italic">⚠️ Transfer sesuai nominal persis di atas agar otomatis terverifikasi!</span>
             </div>
 
-            <div class="flex items-center justify-center gap-1.5 text-xs text-slate-600 font-medium pt-1">
-              <span class="w-2 h-2 rounded-full bg-amber-500 animate-ping"></span>
-              Menunggu Pembayaran (Otomatis Sync)...
+            <div class="flex items-center justify-between text-xs text-slate-600 font-medium pt-1 px-1 border-t border-slate-100">
+              <span class="flex items-center gap-1.5">
+                <span class="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
+                Auto Sync Polling
+              </span>
+              <span id="qrTimerCount" class="font-mono text-rose-600 font-bold bg-rose-50 px-2 py-0.5 rounded border border-rose-200">
+                10:00
+              </span>
             </div>
           </div>
         </div>
@@ -233,8 +246,6 @@
 
   <script>
     lucide.createIcons();
-
-    let currentActiveKey = localStorage.getItem('boz_active_key') || null;
 
     const userSession = JSON.parse(localStorage.getItem('boz_user') || '{}');
     if (!userSession.email) {
@@ -306,6 +317,30 @@
       setInterval(updateCountdown, 1000);
     }
 
+    let qrTimerInterval = null;
+    function startQr10MinTimer() {
+      if (qrTimerInterval) clearInterval(qrTimerInterval);
+      let durationSeconds = 10 * 60; // 10 minutes
+      document.getElementById('qrExpiredOverlay').classList.add('hidden');
+
+      function updateQrTimer() {
+        if (durationSeconds <= 0) {
+          clearInterval(qrTimerInterval);
+          if (pollInterval) clearInterval(pollInterval);
+          document.getElementById('qrExpiredOverlay').classList.remove('hidden');
+          document.getElementById('qrTimerCount').innerText = "00:00";
+          return;
+        }
+        const mins = Math.floor(durationSeconds / 60).toString().padStart(2, '0');
+        const secs = (durationSeconds % 60).toString().padStart(2, '0');
+        document.getElementById('qrTimerCount').innerText = `${mins}:${secs}`;
+        durationSeconds--;
+      }
+
+      updateQrTimer();
+      qrTimerInterval = setInterval(updateQrTimer, 1000);
+    }
+
     async function generateQRIS(btn) {
       const originalText = btn.innerHTML;
       btn.disabled = true;
@@ -332,6 +367,7 @@
           container.classList.remove('hidden');
           lucide.createIcons();
 
+          startQr10MinTimer();
           startPaymentPolling(json.data.total_amount);
         } else {
           alert('Gagal membuat QRIS: ' + (json.message || 'Error server'));
@@ -363,21 +399,23 @@
           const json = await res.json();
           if (json.success && json.paid) {
             clearInterval(pollInterval);
-            
-            // SAVE UNLOCKED KEY
+            if (qrTimerInterval) clearInterval(qrTimerInterval);
+
+            // SAVE UNLOCKED KEY & EXPIRE
             const unlockedKey = json.api_key || `sk-boz-active-${Date.now().toString(36)}`;
             const newExpiry = Date.now() + (24 * 60 * 60 * 1000);
             
             localStorage.setItem('boz_active_key', unlockedKey);
             localStorage.setItem('boz_key_expires', newExpiry);
             
-            alert('🎉 Pembayaran Sukses! API Key sk-boz-* Anda telah aktif.');
-            checkKeyStatus();
+            alert('🎉 Pembayaran Sukses Terdeteksi!\n\nAPI Key sk-boz-* Anda telah aktif & siap digunakan!');
             
-            document.getElementById('qrisContainer').classList.add('hidden');
+            // AUTO REFRESH & UNLOCK DISPLAY
+            checkKeyStatus();
+            window.location.reload();
           }
         } catch (e) {}
-      }, 4000);
+      }, 3000);
     }
 
     async function fetchUserRecentRequests(key) {
