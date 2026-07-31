@@ -127,7 +127,7 @@
             </div>
             <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200">
               <span class="text-slate-500 block mb-1 font-medium">Endpoint Base</span>
-              <span class="font-bold text-boz-blue text-sm truncate">api.bozagent.my.id</span>
+              <span class="font-bold text-boz-blue text-sm truncate">api.bozgravity.web.id</span>
             </div>
           </div>
         </div>
@@ -172,12 +172,12 @@
           <h3 class="text-base font-bold text-boz-black mb-3 flex items-center gap-2">
             <i data-lucide="code" class="w-4 h-4 text-boz-blue"></i> Quick Integration (OpenAI SDK Compatible)
           </h3>
-          <p class="text-xs text-slate-500 mb-4">Gunakan base URL <code class="bg-slate-100 text-boz-blue px-1.5 py-0.5 rounded font-mono">https://api.bozagent.my.id/v1</code> pada OpenAI SDK, 9Router, Cursor, OpenCode, atau Ollama client.</p>
+          <p class="text-xs text-slate-500 mb-4">Gunakan base URL <code class="bg-slate-100 text-boz-blue px-1.5 py-0.5 rounded font-mono">https://api.bozgravity.web.id/v1</code> pada OpenAI SDK, 9Router, Cursor, OpenCode, atau Ollama client.</p>
           <div class="bg-slate-900 p-4 rounded-xl font-mono text-xs text-slate-200 overflow-x-auto border border-slate-800 shadow-inner">
 <pre><code><span class="text-purple-400">import</span> { OpenAI } <span class="text-purple-400">from</span> <span class="text-emerald-400">'openai'</span>;
 
 <span class="text-purple-400">const</span> client = <span class="text-purple-400">new</span> OpenAI({
-  baseURL: <span class="text-emerald-400">'https://api.bozagent.my.id/v1'</span>,
+  baseURL: <span class="text-emerald-400">'https://api.bozgravity.web.id/v1'</span>,
   apiKey: <span class="text-emerald-400">'<span id="snippetKey">sk-boz-...</span>'</span>,
 });
 
@@ -290,7 +290,7 @@
 
     async function fetchUserRecentRequests() {
       try {
-        const res = await fetch(`https://api.bozagent.my.id/api/requests/user?key=${encodeURIComponent(currentKey)}`);
+        const res = await fetch(`https://api.bozgravity.web.id/api/requests/user?key=${encodeURIComponent(currentKey)}`);
         const json = await res.json();
         if (json && json.data) {
           renderUserRecentTable('userRequestsBody', json.data);

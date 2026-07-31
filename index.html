@@ -139,7 +139,7 @@
               </button>
             </div>
             
-<pre id="heroCodeBlock" class="whitespace-pre overflow-x-auto font-mono"><span class="text-purple-400">curl</span> -X POST https://api.bozagent.my.id/v1/chat/completions \
+<pre id="heroCodeBlock" class="whitespace-pre overflow-x-auto font-mono"><span class="text-purple-400">curl</span> -X POST https://api.bozgravity.web.id/v1/chat/completions \
   <span class="text-boz-blue">-H</span> <span class="text-emerald-300">"Content-Type: application/json"</span> \
   <span class="text-boz-blue">-H</span> <span class="text-emerald-300">"Authorization: Bearer sk-boz-retail-24h-active-fullpool-v1"</span> \
   <span class="text-boz-blue">-d</span> '{
@@ -335,7 +335,7 @@
         <div class="p-4 sm:p-6 overflow-x-auto text-xs sm:text-base leading-relaxed text-slate-300 bg-slate-950">
 <pre id="ideConfigCode" class="whitespace-pre overflow-x-auto font-mono"><span class="text-slate-400">{</span>
   <span class="text-sky-300">"apiProvider"</span>: <span class="text-emerald-300">"openai-compatible"</span>,
-  <span class="text-sky-300">"baseUrl"</span>: <span class="text-emerald-300">"https://api.bozagent.my.id/v1"</span>,
+  <span class="text-sky-300">"baseUrl"</span>: <span class="text-emerald-300">"https://api.bozgravity.web.id/v1"</span>,
   <span class="text-sky-300">"apiKey"</span>: <span class="text-emerald-300">"sk-boz-retail-24h-active-fullpool-v1"</span>,
   <span class="text-sky-300">"modelId"</span>: <span class="text-emerald-300">"minimax-m3"</span>
 <span class="text-slate-400">}</span></pre>
@@ -489,7 +489,7 @@
 
     async function fetchPublicRecentRequests() {
       try {
-        const res = await fetch('https://api.bozagent.my.id/api/requests/public');
+        const res = await fetch('https://api.bozgravity.web.id/api/requests/public');
         const json = await res.json();
         if (json && json.data) {
           renderRecentTable('publicRequestsBody', json.data);
