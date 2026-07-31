@@ -1,74 +1,55 @@
 <!DOCTYPE html>
-<html lang="id" class="scroll-smooth">
+<html lang="id" class="scroll-smooth h-full bg-slate-50">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Dashboard Developer — Bozgravity Gateway</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Developer Portal — Bozgravity Gateway</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://unpkg.com/lucide@latest"></script>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Google+Sans:ital,wght@0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
   <script>
     tailwind.config = {
       theme: {
         extend: {
           fontFamily: {
             sans: ['"Google Sans"', 'sans-serif'],
-            display: ['"Google Sans"', 'sans-serif'],
+            mono: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', 'monospace']
           },
           colors: {
             boz: {
               orange: '#FF601C',
               blue: '#077BF4',
-              black: '#121317',
-              gray: '#5f6368',
-              lightbg: '#f8f9fa',
-              cardbg: '#ffffff',
-              border: '#e2e8f0',
+              black: '#121317'
             }
           }
         }
       }
     }
   </script>
-  <style>
-    body { background-color: #ffffff; color: #121317; font-family: 'Google Sans', sans-serif; overflow-x: hidden; width: 100%; }
-    .glass-nav { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
-    .card-boz-white { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 1.5rem; transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1); box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
-    .card-boz-white:hover { box-shadow: 0 20px 40px -15px rgba(18, 19, 23, 0.08); border-color: #cbd5e1; }
-    .btn-boz-orange { background-color: #FF601C; color: #ffffff; transition: all 0.2s ease; }
-    .btn-boz-orange:hover { background-color: #e04f0f; transform: translateY(-1px); box-shadow: 0 8px 20px -4px rgba(255, 96, 28, 0.35); }
-    .btn-boz-blue { background-color: #077BF4; color: #ffffff; transition: all 0.2s ease; }
-    .btn-boz-blue:hover { background-color: #0562c6; transform: translateY(-1px); box-shadow: 0 8px 20px -4px rgba(7, 123, 244, 0.35); }
-  </style>
 </head>
-<body class="bg-white text-boz-black antialiased selection:bg-boz-orange selection:text-white min-h-screen flex flex-col">
+<body class="font-sans antialiased text-slate-800 bg-slate-50 min-h-full flex flex-col">
 
-  <!-- Header / Navigation -->
-  <header class="sticky top-0 z-50 glass-nav border-b border-slate-100">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between gap-2">
-      
-      <!-- Brand Lockup -->
-      <a href="/" class="flex items-center group shrink-0 gap-2">
-        <img src="/logo_transparent.png" alt="Bozgravity Gateway Logo" class="h-6 sm:h-8 w-auto group-hover:scale-105 transition-transform duration-300">
-        <span class="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-orange-50 text-boz-orange border border-orange-200">Dashboard</span>
+  <!-- Navbar -->
+  <header class="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-slate-200/80">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <a href="/" class="flex items-center gap-3">
+        <div class="w-8 h-8 rounded-xl bg-gradient-to-tr from-boz-orange to-amber-400 flex items-center justify-center text-white font-bold text-lg shadow-md shadow-orange-500/20">
+          B
+        </div>
+        <span class="font-bold text-lg tracking-tight text-boz-black">Bozgravity <span class="text-xs px-2 py-0.5 rounded-full bg-orange-100 text-boz-orange font-bold uppercase border border-orange-200">Gateway</span></span>
       </a>
 
-      <!-- Right User Controls -->
-      <div class="flex items-center gap-3">
-        <div id="userInfo" class="flex items-center gap-2 bg-slate-50 border border-slate-200 px-3 py-1.5 rounded-full text-xs text-slate-700 shadow-sm">
-          <img id="userAvatar" src="https://via.placeholder.com/32" class="w-5 h-5 rounded-full border border-slate-200" alt="Avatar">
-          <span id="userEmail" class="font-semibold text-slate-900">user@gmail.com</span>
+      <div class="flex items-center gap-4">
+        <div class="flex items-center gap-2 bg-slate-100 p-1.5 pl-3 rounded-full border border-slate-200">
+          <img id="userAvatar" src="https://ui-avatars.com/api/?name=User&background=FF601C&color=fff" class="w-6 h-6 rounded-full" alt="Avatar">
+          <span id="userEmail" class="text-xs font-bold text-slate-700 max-w-[140px] truncate sm:max-w-xs">loading...</span>
+          <button onclick="logout()" class="text-slate-400 hover:text-rose-600 p-1 rounded-full hover:bg-white transition-colors" title="Logout">
+            <i data-lucide="log-out" class="w-4 h-4"></i>
+          </button>
         </div>
-        
-        <button onclick="logout()" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-slate-200 bg-white hover:bg-slate-50 text-slate-600 hover:text-slate-900 font-semibold text-xs transition-all shadow-sm">
-          <i data-lucide="log-out" class="w-3.5 h-3.5"></i>
-          <span>Keluar</span>
-        </button>
       </div>
-
     </div>
   </header>
 
@@ -84,9 +65,9 @@
         <p class="text-sm text-slate-500 mt-1">Kelola API Key, pantau kuota harian, dan lacak request terkini khusus akun Anda.</p>
       </div>
       <div class="flex items-center gap-2">
-        <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 text-xs font-semibold">
-          <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-          Gateway API Active
+        <span id="gatewayBadgeStatus" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-100 text-slate-600 border border-slate-200 text-xs font-semibold">
+          <span class="w-2 h-2 rounded-full bg-slate-400"></span>
+          Key Inactive
         </span>
       </div>
     </div>
@@ -97,17 +78,17 @@
       <div class="lg:col-span-2 space-y-6">
         
         <!-- API Key Card -->
-        <div class="card-boz-white p-6 relative overflow-hidden bg-white">
+        <div class="card-boz-white p-6 relative overflow-hidden bg-white rounded-2xl border border-slate-200 shadow-sm">
           <div class="flex items-center justify-between mb-4">
             <h2 class="text-base sm:text-lg font-bold text-boz-black flex items-center gap-2">
               <i data-lucide="key" class="w-5 h-5 text-boz-orange"></i> API Key Aktif Anda
             </h2>
-            <span class="text-xs bg-emerald-50 text-emerald-700 border border-emerald-200 px-3 py-1 rounded-full font-semibold">STATUS: ACTIVE</span>
+            <span id="keyBadge" class="text-xs bg-amber-50 text-amber-700 border border-amber-200 px-3 py-1 rounded-full font-semibold">STATUS: UNPAID</span>
           </div>
           
           <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 flex items-center justify-between gap-3 mb-6">
-            <code id="apiKeyDisplay" class="text-sm sm:text-base font-mono text-boz-orange font-bold truncate">sk-boz-********************************</code>
-            <button onclick="copyApiKey()" class="btn-boz-orange px-4 py-2 rounded-lg text-xs font-bold flex items-center gap-1.5 shrink-0 shadow-sm">
+            <code id="apiKeyDisplay" class="text-sm sm:text-base font-mono text-slate-400 font-bold truncate">sk-boz-********************************</code>
+            <button id="copyKeyBtn" onclick="copyApiKey()" disabled class="bg-slate-200 text-slate-400 cursor-not-allowed px-4 py-2 rounded-lg text-xs font-bold flex items-center gap-1.5 shrink-0 transition-all">
               <i data-lucide="copy" class="w-3.5 h-3.5"></i> Copy Key
             </button>
           </div>
@@ -119,7 +100,7 @@
             </div>
             <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200">
               <span class="text-slate-500 block mb-1 font-medium">Masa Aktif Sisa</span>
-              <span id="keyTimerDisplay" class="font-bold text-emerald-600 text-sm">23 J 59 M 59 S</span>
+              <span id="keyTimerDisplay" class="font-bold text-rose-600 text-sm">Belum Aktif</span>
             </div>
             <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200">
               <span class="text-slate-500 block mb-1 font-medium">Rate Limit</span>
@@ -132,8 +113,8 @@
           </div>
         </div>
 
-        <!-- 9ROUTER-STYLE USER RECENT REQUESTS TABLE (KHUSUS USER LOGIN) -->
-        <div class="card-boz-white p-6 bg-white space-y-4">
+        <!-- 9ROUTER-STYLE USER RECENT REQUESTS TABLE -->
+        <div class="card-boz-white p-6 bg-white space-y-4 rounded-2xl border border-slate-200 shadow-sm">
           <div class="flex items-center justify-between border-b border-slate-100 pb-3">
             <div>
               <h3 class="text-base font-bold text-boz-black flex items-center gap-2">
@@ -159,7 +140,7 @@
                 </thead>
                 <tbody id="userRequestsBody" class="divide-y divide-slate-800/60 text-slate-200">
                   <tr>
-                    <td colspan="3" class="py-6 text-center text-slate-500">Memuat transaksi request Anda...</td>
+                    <td colspan="3" class="py-6 text-center text-slate-500">Silakan aktifkan key untuk melihat aktivitas request.</td>
                   </tr>
                 </tbody>
               </table>
@@ -168,7 +149,7 @@
         </div>
 
         <!-- Quick Integration Snippet -->
-        <div class="card-boz-white p-6 bg-white">
+        <div class="card-boz-white p-6 bg-white rounded-2xl border border-slate-200 shadow-sm">
           <h3 class="text-base font-bold text-boz-black mb-3 flex items-center gap-2">
             <i data-lucide="code" class="w-4 h-4 text-boz-blue"></i> Quick Integration (OpenAI SDK Compatible)
           </h3>
@@ -178,7 +159,7 @@
 
 <span class="text-purple-400">const</span> client = <span class="text-purple-400">new</span> OpenAI({
   baseURL: <span class="text-emerald-400">'https://api.bozgravity.web.id/v1'</span>,
-  apiKey: <span class="text-emerald-400">'<span id="snippetKey">sk-boz-...</span>'</span>,
+  apiKey: <span class="text-emerald-400">'<span id="snippetKey">sk-boz-****************</span>'</span>,
 });
 
 <span class="text-purple-400">const</span> response = <span class="text-purple-400">await</span> client.chat.completions.create({
@@ -194,29 +175,38 @@
       <div class="space-y-6">
         
         <!-- ShopeePay QRIS Buy Box -->
-        <div class="card-boz-white p-6 relative border-orange-200 bg-gradient-to-b from-orange-50/50 to-white">
+        <div class="card-boz-white p-6 relative border-orange-200 bg-gradient-to-b from-orange-50/50 to-white rounded-2xl border shadow-sm">
           <h3 class="text-base font-bold text-boz-black mb-1 flex items-center gap-2">
-            <i data-lucide="qr-code" class="w-5 h-5 text-boz-orange"></i> Perpanjang / Top Up Key
+            <i data-lucide="qr-code" class="w-5 h-5 text-boz-orange"></i> Aktifkan / Perpanjang Key
           </h3>
           <p class="text-xs text-slate-500 mb-4">Bayar instant via ShopeePay / All QRIS. Key otomatis terbit & aktif 24 jam.</p>
           
           <div class="bg-white p-4 rounded-2xl border border-slate-200 text-center space-y-3 mb-4 shadow-sm">
             <span class="text-xs text-slate-500 block font-medium">Paket Retail Harian</span>
             <span class="text-3xl font-extrabold text-boz-black">Rp 5.000 <span class="text-xs font-normal text-slate-400">/ 24 Jam</span></span>
-            <button onclick="generateQRIS()" class="w-full btn-boz-orange font-bold py-3 rounded-xl text-xs flex items-center justify-center gap-2 shadow-sm">
-              <i data-lucide="credit-card" class="w-4 h-4"></i> Generate QRIS ShopeePay
+            <button onclick="generateQRIS(this)" class="w-full bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white font-bold py-3 rounded-xl text-xs flex items-center justify-center gap-2 shadow-md shadow-orange-500/20 transition-all">
+              <i data-lucide="credit-card" class="w-4 h-4"></i> Generate QRIS Kode Unik
             </button>
           </div>
 
-          <div id="qrisContainer" class="hidden text-center space-y-3 p-4 bg-white rounded-xl border border-slate-200">
+          <div id="qrisContainer" class="hidden text-center space-y-3 p-4 bg-white rounded-xl border border-slate-200 shadow-sm">
             <img id="qrisImage" src="" class="mx-auto w-48 h-48 border border-slate-200 rounded-lg p-2 bg-white" alt="QRIS">
-            <span class="text-xs text-slate-800 font-bold block">Scan QRIS via ShopeePay / e-Wallet</span>
-            <span class="text-[10px] text-slate-500 block">Status: Menunggu Pembayaran...</span>
+            
+            <div class="bg-amber-50 border border-amber-200 p-2.5 rounded-lg text-xs space-y-1">
+              <span class="text-slate-500 block font-medium">Total Tagihan (Termasuk Kode Unik):</span>
+              <span id="uniqueAmountDisplay" class="text-lg font-extrabold text-boz-orange font-mono">Rp 5.000</span>
+              <span class="text-[10px] text-amber-700 block italic">⚠️ Pastikan bayar sesuai nominal di atas agar otomatis terverifikasi!</span>
+            </div>
+
+            <div class="flex items-center justify-center gap-1.5 text-xs text-slate-600 font-medium pt-1">
+              <span class="w-2 h-2 rounded-full bg-amber-500 animate-ping"></span>
+              Menunggu Pembayaran (Otomatis Sync)...
+            </div>
           </div>
         </div>
 
         <!-- Account Info -->
-        <div class="card-boz-white p-6 space-y-3 bg-white">
+        <div class="card-boz-white p-6 space-y-3 bg-white rounded-2xl border border-slate-200 shadow-sm">
           <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wider">Detail Akun Developer</h4>
           <div class="text-xs space-y-2.5 pt-1 border-t border-slate-100">
             <div class="flex justify-between items-center text-slate-600">
@@ -244,9 +234,8 @@
   <script>
     lucide.createIcons();
 
-    let currentKey = 'sk-boz-retail-24h-active-fullpool-v1';
+    let currentActiveKey = localStorage.getItem('boz_active_key') || null;
 
-    // Check user session
     const userSession = JSON.parse(localStorage.getItem('boz_user') || '{}');
     if (!userSession.email) {
       window.location.href = '/';
@@ -254,43 +243,147 @@
       document.getElementById('userEmail').innerText = userSession.email;
       document.getElementById('accountEmail').innerText = userSession.email;
       if (userSession.picture) document.getElementById('userAvatar').src = userSession.picture;
-      
-      localStorage.setItem('boz_key', currentKey);
-      
-      // Setup dynamic 24H Countdown Timer
-      let expireTime = localStorage.getItem('boz_key_expires');
-      if (!expireTime) {
-        expireTime = Date.now() + (24 * 60 * 60 * 1000);
-        localStorage.setItem('boz_key_expires', expireTime);
-      }
 
+      checkKeyStatus();
+    }
+
+    function checkKeyStatus() {
+      const activeKey = localStorage.getItem('boz_active_key');
+      const expireTime = localStorage.getItem('boz_key_expires');
+
+      if (activeKey && expireTime && Date.now() < parseInt(expireTime, 10)) {
+        // UNLOCKED STATE
+        document.getElementById('apiKeyDisplay').innerText = activeKey;
+        document.getElementById('snippetKey').innerText = activeKey;
+        document.getElementById('keyBadge').innerText = "STATUS: ACTIVE";
+        document.getElementById('keyBadge').className = "text-xs bg-emerald-50 text-emerald-700 border border-emerald-200 px-3 py-1 rounded-full font-semibold";
+        
+        const copyBtn = document.getElementById('copyKeyBtn');
+        copyBtn.disabled = false;
+        copyBtn.className = "btn-boz-orange bg-boz-orange text-white hover:bg-orange-600 px-4 py-2 rounded-lg text-xs font-bold flex items-center gap-1.5 shrink-0 shadow-sm cursor-pointer transition-all";
+
+        document.getElementById('gatewayBadgeStatus').innerHTML = `
+          <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+          Gateway API Active
+        `;
+        document.getElementById('gatewayBadgeStatus').className = "inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 text-xs font-semibold";
+
+        startCountdownTimer(parseInt(expireTime, 10));
+        fetchUserRecentRequests(activeKey);
+      } else {
+        // LOCKED STATE
+        document.getElementById('apiKeyDisplay').innerText = 'sk-boz-********************************';
+        document.getElementById('snippetKey').innerText = 'sk-boz-****************';
+        document.getElementById('keyBadge').innerText = 'STATUS: UNPAID / EXPIRED';
+        document.getElementById('keyBadge').className = "text-xs bg-amber-50 text-amber-700 border border-amber-200 px-3 py-1 rounded-full font-semibold";
+        
+        const copyBtn = document.getElementById('copyKeyBtn');
+        copyBtn.disabled = true;
+        copyBtn.className = "bg-slate-200 text-slate-400 cursor-not-allowed px-4 py-2 rounded-lg text-xs font-bold flex items-center gap-1.5 shrink-0 transition-all";
+
+        document.getElementById('keyTimerDisplay').innerText = "Belum Aktif (Silakan Bayar)";
+        document.getElementById('keyTimerDisplay').className = "font-bold text-rose-600 text-xs";
+      }
+    }
+
+    function startCountdownTimer(expireTime) {
       function updateCountdown() {
         const now = Date.now();
         const diff = expireTime - now;
         if (diff <= 0) {
-          document.getElementById('keyTimerDisplay').innerText = "EXPIRED (Silakan Top Up)";
-          document.getElementById('keyTimerDisplay').className = "font-bold text-rose-600 text-sm";
+          localStorage.removeItem('boz_active_key');
+          localStorage.removeItem('boz_key_expires');
+          checkKeyStatus();
           return;
         }
         const hours = Math.floor(diff / (1000 * 60 * 60));
         const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
         const secs = Math.floor((diff % (1000 * 60)) / 1000);
         document.getElementById('keyTimerDisplay').innerText = `${hours} J ${mins} M ${secs} S`;
+        document.getElementById('keyTimerDisplay').className = "font-bold text-emerald-600 text-xs";
       }
       updateCountdown();
       setInterval(updateCountdown, 1000);
-
-      document.getElementById('apiKeyDisplay').innerText = currentKey;
-      document.getElementById('snippetKey').innerText = currentKey;
-
-      // Fetch User Specific Recent Requests Real-time
-      fetchUserRecentRequests();
-      setInterval(fetchUserRecentRequests, 3000);
     }
 
-    async function fetchUserRecentRequests() {
+    async function generateQRIS(btn) {
+      const originalText = btn.innerHTML;
+      btn.disabled = true;
+      btn.innerHTML = `<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i> Memproses...`;
+
       try {
-        const res = await fetch(`https://api.bozgravity.web.id/api/requests/user?key=${encodeURIComponent(currentKey)}`);
+        const res = await fetch('https://api.bozgravity.web.id/create-qris', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-API-Key': 'bozgravity-shopeepay-secret-key-2026'
+          },
+          body: JSON.stringify({ amount: 5000, email: userSession.email })
+        });
+
+        const json = await res.json();
+        if (json.success && json.data) {
+          const container = document.getElementById('qrisContainer');
+          const img = document.getElementById('qrisImage');
+          const displayAmt = document.getElementById('uniqueAmountDisplay');
+          
+          img.src = json.data.qris_url;
+          displayAmt.innerText = `Rp ${json.data.total_amount.toLocaleString('id-ID')}`;
+          container.classList.remove('hidden');
+          lucide.createIcons();
+
+          startPaymentPolling(json.data.total_amount);
+        } else {
+          alert('Gagal membuat QRIS: ' + (json.message || 'Error server'));
+        }
+      } catch (err) {
+        alert('Terjadi kesalahan koneksi QRIS Gateway.');
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = originalText;
+        lucide.createIcons();
+      }
+    }
+
+    let pollInterval = null;
+    function startPaymentPolling(totalAmount) {
+      if (pollInterval) clearInterval(pollInterval);
+      const startTime = new Date().toISOString();
+
+      pollInterval = setInterval(async () => {
+        try {
+          const res = await fetch('https://api.bozgravity.web.id/check-payment', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'X-API-Key': 'bozgravity-shopeepay-secret-key-2026'
+            },
+            body: JSON.stringify({ amount: totalAmount, startTime, email: userSession.email })
+          });
+          const json = await res.json();
+          if (json.success && json.paid) {
+            clearInterval(pollInterval);
+            
+            // SAVE UNLOCKED KEY
+            const unlockedKey = json.api_key || `sk-boz-active-${Date.now().toString(36)}`;
+            const newExpiry = Date.now() + (24 * 60 * 60 * 1000);
+            
+            localStorage.setItem('boz_active_key', unlockedKey);
+            localStorage.setItem('boz_key_expires', newExpiry);
+            
+            alert('🎉 Pembayaran Sukses! API Key sk-boz-* Anda telah aktif.');
+            checkKeyStatus();
+            
+            document.getElementById('qrisContainer').classList.add('hidden');
+          }
+        } catch (e) {}
+      }, 4000);
+    }
+
+    async function fetchUserRecentRequests(key) {
+      if (!key) return;
+      try {
+        const res = await fetch(`https://api.bozgravity.web.id/api/requests/user?key=${encodeURIComponent(key)}`);
         const json = await res.json();
         if (json && json.data) {
           renderUserRecentTable('userRequestsBody', json.data);
@@ -328,79 +421,20 @@
     }
 
     function copyApiKey() {
-      const key = localStorage.getItem('boz_key');
+      const key = localStorage.getItem('boz_active_key');
+      if (!key) {
+        alert('Silakan lakukan pembayaran QRIS terlebih dahulu untuk membuka API Key!');
+        return;
+      }
       navigator.clipboard.writeText(key);
       alert('API Key berhasil disalin ke clipboard!');
     }
 
     function logout() {
       localStorage.removeItem('boz_user');
-      localStorage.removeItem('boz_key');
+      localStorage.removeItem('boz_active_key');
+      localStorage.removeItem('boz_key_expires');
       window.location.href = '/';
-    }
-
-    async function generateQRIS(btn) {
-      if (!btn) btn = event.currentTarget;
-      const originalText = btn.innerHTML;
-      btn.disabled = true;
-      btn.innerHTML = `<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i> Memproses QRIS...`;
-
-      try {
-        const res = await fetch('https://api.bozgravity.web.id/create-qris', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'X-API-Key': 'bozgravity-shopeepay-secret-key-2026'
-          },
-          body: JSON.stringify({ amount: 5000 })
-        });
-
-        const json = await res.json();
-        if (json.success && json.data) {
-          const container = document.getElementById('qrisContainer');
-          const img = document.getElementById('qrisImage');
-          img.src = json.data.qris_url;
-          container.classList.remove('hidden');
-          lucide.createIcons();
-
-          startPaymentPolling(5000);
-        } else {
-          alert('Gagal membuat QRIS: ' + (json.message || 'Error server'));
-        }
-      } catch (err) {
-        alert('Terjadi kesalahan koneksi QRIS Gateway.');
-      } finally {
-        btn.disabled = false;
-        btn.innerHTML = originalText;
-        lucide.createIcons();
-      }
-    }
-
-    let pollInterval = null;
-    function startPaymentPolling(amount) {
-      if (pollInterval) clearInterval(pollInterval);
-      const startTime = new Date().toISOString();
-
-      pollInterval = setInterval(async () => {
-        try {
-          const res = await fetch('https://api.bozgravity.web.id/check-payment', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'X-API-Key': 'bozgravity-shopeepay-secret-key-2026'
-            },
-            body: JSON.stringify({ amount, startTime })
-          });
-          const json = await res.json();
-          if (json.success && json.paid) {
-            clearInterval(pollInterval);
-            alert('🎉 Pembayaran Sukses! Key sk-boz-* Anda telah diperpanjang 24 Jam.');
-            const newExpiry = Date.now() + (24 * 60 * 60 * 1000);
-            localStorage.setItem('boz_key_expires', newExpiry);
-            window.location.reload();
-          }
-        } catch (e) {}
-      }, 5000);
     }
   </script>
 </body>
