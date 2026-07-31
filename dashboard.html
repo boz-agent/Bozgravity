@@ -206,14 +206,20 @@
               <span class="text-[10px] text-amber-700 block italic">⚠️ Transfer sesuai nominal persis di atas agar otomatis terverifikasi!</span>
             </div>
 
-            <div class="flex items-center justify-between text-xs text-slate-600 font-medium pt-1 px-1 border-t border-slate-100">
-              <span class="flex items-center gap-1.5">
-                <span class="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
-                Auto Sync Polling
-              </span>
-              <span id="qrTimerCount" class="font-mono text-rose-600 font-bold bg-rose-50 px-2 py-0.5 rounded border border-rose-200">
-                10:00
-              </span>
+            <div class="space-y-2 pt-1">
+              <div class="flex items-center justify-between text-xs text-slate-600 font-medium px-1 border-t border-slate-100 pt-2">
+                <span class="flex items-center gap-1.5">
+                  <span class="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
+                  Auto Sync Polling
+                </span>
+                <span id="qrTimerCount" class="font-mono text-rose-600 font-bold bg-rose-50 px-2 py-0.5 rounded border border-rose-200">
+                  10:00
+                </span>
+              </div>
+
+              <button onclick="manualVerifyPayment()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2 rounded-lg text-xs flex items-center justify-center gap-1.5 shadow-sm transition-all">
+                <i data-lucide="check-circle-2" class="w-4 h-4"></i> Saya Sudah Bayar (Konfirmasi Instant)
+              </button>
             </div>
           </div>
         </div>
@@ -256,6 +262,7 @@
       if (userSession.picture) document.getElementById('userAvatar').src = userSession.picture;
 
       checkKeyStatus();
+      restorePendingQRIS();
     }
 
     function checkKeyStatus() {
@@ -318,27 +325,52 @@
     }
 
     let qrTimerInterval = null;
-    function startQr10MinTimer() {
+    function startQr10MinTimer(expiresAt) {
       if (qrTimerInterval) clearInterval(qrTimerInterval);
-      let durationSeconds = 10 * 60; // 10 minutes
       document.getElementById('qrExpiredOverlay').classList.add('hidden');
 
       function updateQrTimer() {
-        if (durationSeconds <= 0) {
+        const now = Date.now();
+        const diffSeconds = Math.floor((expiresAt - now) / 1000);
+
+        if (diffSeconds <= 0) {
           clearInterval(qrTimerInterval);
           if (pollInterval) clearInterval(pollInterval);
+          localStorage.removeItem('boz_pending_qris');
           document.getElementById('qrExpiredOverlay').classList.remove('hidden');
           document.getElementById('qrTimerCount').innerText = "00:00";
           return;
         }
-        const mins = Math.floor(durationSeconds / 60).toString().padStart(2, '0');
-        const secs = (durationSeconds % 60).toString().padStart(2, '0');
+        const mins = Math.floor(diffSeconds / 60).toString().padStart(2, '0');
+        const secs = (diffSeconds % 60).toString().padStart(2, '0');
         document.getElementById('qrTimerCount').innerText = `${mins}:${secs}`;
-        durationSeconds--;
       }
 
       updateQrTimer();
       qrTimerInterval = setInterval(updateQrTimer, 1000);
+    }
+
+    function restorePendingQRIS() {
+      const stored = localStorage.getItem('boz_pending_qris');
+      if (!stored) return;
+      try {
+        const data = JSON.parse(stored);
+        if (data.expires_at && Date.now() < data.expires_at) {
+          const container = document.getElementById('qrisContainer');
+          const img = document.getElementById('qrisImage');
+          const displayAmt = document.getElementById('uniqueAmountDisplay');
+          
+          img.src = data.qris_url;
+          displayAmt.innerText = `Rp ${data.total_amount.toLocaleString('id-ID')}`;
+          container.classList.remove('hidden');
+          lucide.createIcons();
+
+          startQr10MinTimer(data.expires_at);
+          startPaymentPolling(data.total_amount, new Date(data.created_at).toISOString());
+        } else {
+          localStorage.removeItem('boz_pending_qris');
+        }
+      } catch (e) {}
     }
 
     async function generateQRIS(btn) {
@@ -367,8 +399,16 @@
           container.classList.remove('hidden');
           lucide.createIcons();
 
-          startQr10MinTimer();
-          startPaymentPolling(json.data.total_amount);
+          // PERSIST IN LOCALSTORAGE (SURVIVES REFRESH)
+          localStorage.setItem('boz_pending_qris', JSON.stringify({
+            qris_url: json.data.qris_url,
+            total_amount: json.data.total_amount,
+            created_at: json.data.created_at,
+            expires_at: json.data.expires_at
+          }));
+
+          startQr10MinTimer(json.data.expires_at);
+          startPaymentPolling(json.data.total_amount, new Date(json.data.created_at).toISOString());
         } else {
           alert('Gagal membuat QRIS: ' + (json.message || 'Error server'));
         }
@@ -382,9 +422,9 @@
     }
 
     let pollInterval = null;
-    function startPaymentPolling(totalAmount) {
+    function startPaymentPolling(totalAmount, startTime) {
       if (pollInterval) clearInterval(pollInterval);
-      const startTime = new Date().toISOString();
+      const startIso = startTime || new Date().toISOString();
 
       pollInterval = setInterval(async () => {
         try {
@@ -394,28 +434,61 @@
               'Content-Type': 'application/json',
               'X-API-Key': 'bozgravity-shopeepay-secret-key-2026'
             },
-            body: JSON.stringify({ amount: totalAmount, startTime, email: userSession.email })
+            body: JSON.stringify({ amount: totalAmount, startTime: startIso, email: userSession.email })
           });
           const json = await res.json();
           if (json.success && json.paid) {
-            clearInterval(pollInterval);
-            if (qrTimerInterval) clearInterval(qrTimerInterval);
-
-            // SAVE UNLOCKED KEY & EXPIRE
-            const unlockedKey = json.api_key || `sk-boz-active-${Date.now().toString(36)}`;
-            const newExpiry = Date.now() + (24 * 60 * 60 * 1000);
-            
-            localStorage.setItem('boz_active_key', unlockedKey);
-            localStorage.setItem('boz_key_expires', newExpiry);
-            
-            alert('🎉 Pembayaran Sukses Terdeteksi!\n\nAPI Key sk-boz-* Anda telah aktif & siap digunakan!');
-            
-            // AUTO REFRESH & UNLOCK DISPLAY
-            checkKeyStatus();
-            window.location.reload();
+            handleSuccessfulPayment(json.api_key);
           }
         } catch (e) {}
       }, 3000);
+    }
+
+    async function manualVerifyPayment() {
+      const stored = localStorage.getItem('boz_pending_qris');
+      let totalAmount = 5000;
+      let startTime = new Date().toISOString();
+
+      if (stored) {
+        try {
+          const data = JSON.parse(stored);
+          totalAmount = data.total_amount;
+          startTime = new Date(data.created_at).toISOString();
+        } catch(e){}
+      }
+
+      try {
+        const res = await fetch('https://api.bozgravity.web.id/check-payment', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-API-Key': 'bozgravity-shopeepay-secret-key-2026'
+          },
+          body: JSON.stringify({ amount: totalAmount, startTime, email: userSession.email, forceVerify: true })
+        });
+        const json = await res.json();
+        if (json.success && json.paid) {
+          handleSuccessfulPayment(json.api_key);
+        }
+      } catch(e) {
+        alert('Terjadi kesalahan saat memverifikasi pembayaran.');
+      }
+    }
+
+    function handleSuccessfulPayment(apiKey) {
+      if (pollInterval) clearInterval(pollInterval);
+      if (qrTimerInterval) clearInterval(qrTimerInterval);
+      localStorage.removeItem('boz_pending_qris');
+
+      const unlockedKey = apiKey || `sk-boz-active-${Date.now().toString(36)}`;
+      const newExpiry = Date.now() + (24 * 60 * 60 * 1000);
+
+      localStorage.setItem('boz_active_key', unlockedKey);
+      localStorage.setItem('boz_key_expires', newExpiry);
+
+      alert('🎉 Pembayaran Berhasil Terverifikasi!\n\nAPI Key sk-boz-* Anda telah aktif & siap digunakan!');
+      checkKeyStatus();
+      window.location.reload();
     }
 
     async function fetchUserRecentRequests(key) {
@@ -472,6 +545,7 @@
       localStorage.removeItem('boz_user');
       localStorage.removeItem('boz_active_key');
       localStorage.removeItem('boz_key_expires');
+      localStorage.removeItem('boz_pending_qris');
       window.location.href = '/';
     }
   </script>
