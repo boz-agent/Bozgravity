@@ -206,20 +206,14 @@
               <span class="text-[10px] text-amber-700 block italic">⚠️ Transfer sesuai nominal persis di atas agar otomatis terverifikasi!</span>
             </div>
 
-            <div class="space-y-2 pt-1">
-              <div class="flex items-center justify-between text-xs text-slate-600 font-medium px-1 border-t border-slate-100 pt-2">
-                <span class="flex items-center gap-1.5">
-                  <span class="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
-                  Auto Sync Polling
-                </span>
-                <span id="qrTimerCount" class="font-mono text-rose-600 font-bold bg-rose-50 px-2 py-0.5 rounded border border-rose-200">
-                  10:00
-                </span>
-              </div>
-
-              <button onclick="manualVerifyPayment()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2 rounded-lg text-xs flex items-center justify-center gap-1.5 shadow-sm transition-all">
-                <i data-lucide="check-circle-2" class="w-4 h-4"></i> Saya Sudah Bayar (Konfirmasi Instant)
-              </button>
+            <div class="flex items-center justify-between text-xs text-slate-600 font-medium pt-1 px-1 border-t border-slate-100">
+              <span class="flex items-center gap-1.5">
+                <span class="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
+                Menunggu Mutasi Masuk...
+              </span>
+              <span id="qrTimerCount" class="font-mono text-rose-600 font-bold bg-rose-50 px-2 py-0.5 rounded border border-rose-200">
+                10:00
+              </span>
             </div>
           </div>
         </div>
@@ -366,7 +360,7 @@
           lucide.createIcons();
 
           startQr10MinTimer(data.expires_at);
-          startPaymentPolling(data.total_amount, new Date(data.created_at).toISOString());
+          startPaymentPolling(data.total_amount);
         } else {
           localStorage.removeItem('boz_pending_qris');
         }
@@ -408,7 +402,7 @@
           }));
 
           startQr10MinTimer(json.data.expires_at);
-          startPaymentPolling(json.data.total_amount, new Date(json.data.created_at).toISOString());
+          startPaymentPolling(json.data.total_amount);
         } else {
           alert('Gagal membuat QRIS: ' + (json.message || 'Error server'));
         }
@@ -422,9 +416,8 @@
     }
 
     let pollInterval = null;
-    function startPaymentPolling(totalAmount, startTime) {
+    function startPaymentPolling(totalAmount) {
       if (pollInterval) clearInterval(pollInterval);
-      const startIso = startTime || new Date().toISOString();
 
       pollInterval = setInterval(async () => {
         try {
@@ -434,7 +427,7 @@
               'Content-Type': 'application/json',
               'X-API-Key': 'bozgravity-shopeepay-secret-key-2026'
             },
-            body: JSON.stringify({ amount: totalAmount, startTime: startIso, email: userSession.email })
+            body: JSON.stringify({ amount: totalAmount, email: userSession.email })
           });
           const json = await res.json();
           if (json.success && json.paid) {
@@ -442,37 +435,6 @@
           }
         } catch (e) {}
       }, 3000);
-    }
-
-    async function manualVerifyPayment() {
-      const stored = localStorage.getItem('boz_pending_qris');
-      let totalAmount = 5000;
-      let startTime = new Date().toISOString();
-
-      if (stored) {
-        try {
-          const data = JSON.parse(stored);
-          totalAmount = data.total_amount;
-          startTime = new Date(data.created_at).toISOString();
-        } catch(e){}
-      }
-
-      try {
-        const res = await fetch('https://api.bozgravity.web.id/check-payment', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'X-API-Key': 'bozgravity-shopeepay-secret-key-2026'
-          },
-          body: JSON.stringify({ amount: totalAmount, startTime, email: userSession.email, forceVerify: true })
-        });
-        const json = await res.json();
-        if (json.success && json.paid) {
-          handleSuccessfulPayment(json.api_key);
-        }
-      } catch(e) {
-        alert('Terjadi kesalahan saat memverifikasi pembayaran.');
-      }
     }
 
     function handleSuccessfulPayment(apiKey) {
