@@ -351,24 +351,29 @@
       if (!stored) return;
       try {
         const data = JSON.parse(stored);
-        const expiresAtNum = typeof data.expires_at === 'number' ? data.expires_at : new Date(data.expires_at).getTime();
+        const expiresAtNum = typeof data.expires_at === 'number' ? data.expires_at : parseInt(data.expires_at, 10);
+        const now = Date.now();
 
-        if (expiresAtNum && Date.now() < expiresAtNum) {
+        if (expiresAtNum && now < expiresAtNum) {
           const container = document.getElementById('qrisContainer');
           const img = document.getElementById('qrisImage');
           const displayAmt = document.getElementById('uniqueAmountDisplay');
           
-          img.src = data.qris_url;
-          displayAmt.innerText = `Rp ${data.total_amount.toLocaleString('id-ID')}`;
-          container.classList.remove('hidden');
-          lucide.createIcons();
+          if (container && img && displayAmt) {
+            img.src = data.qris_url;
+            displayAmt.innerText = `Rp ${(data.total_amount || data.amount).toLocaleString('id-ID')}`;
+            container.classList.remove('hidden');
+            lucide.createIcons();
+          }
 
           startQr10MinTimer(expiresAtNum);
-          startPaymentPolling(data.total_amount);
+          startPaymentPolling(data.total_amount || data.amount);
         } else {
           localStorage.removeItem('boz_pending_qris');
         }
-      } catch (e) {}
+      } catch (e) {
+        console.error('restorePendingQRIS error:', e);
+      }
     }
 
     async function generateQRIS(btn) {
