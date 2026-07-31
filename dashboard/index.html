@@ -358,11 +358,13 @@
           const container = document.getElementById('qrisContainer');
           const img = document.getElementById('qrisImage');
           const displayAmt = document.getElementById('uniqueAmountDisplay');
+          const overlay = document.getElementById('qrExpiredOverlay');
           
           if (container && img && displayAmt) {
             img.src = data.qris_url;
             displayAmt.innerText = `Rp ${(data.total_amount || data.amount).toLocaleString('id-ID')}`;
             container.classList.remove('hidden');
+            if (overlay) overlay.classList.add('hidden');
             lucide.createIcons();
           }
 
