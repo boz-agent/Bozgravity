@@ -34,11 +34,8 @@
   <!-- Navbar -->
   <header class="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-slate-200/80">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-      <a href="/" class="flex items-center gap-3">
-        <div class="w-8 h-8 rounded-xl bg-gradient-to-tr from-boz-orange to-amber-400 flex items-center justify-center text-white font-bold text-lg shadow-md shadow-orange-500/20">
-          B
-        </div>
-        <span class="font-bold text-lg tracking-tight text-boz-black">Bozgravity <span class="text-xs px-2 py-0.5 rounded-full bg-orange-100 text-boz-orange font-bold uppercase border border-orange-200">Gateway</span></span>
+      <a href="/" class="flex items-center gap-2 group shrink-0">
+        <img src="/logo_transparent.png" alt="Bozgravity Gateway Logo" class="h-7 w-auto group-hover:scale-105 transition-transform duration-300">
       </a>
 
       <div class="flex items-center gap-4">
@@ -298,11 +295,14 @@
       }
     }
 
+    let countdownInterval = null;
     function startCountdownTimer(expireTime) {
+      if (countdownInterval) clearInterval(countdownInterval);
       function updateCountdown() {
         const now = Date.now();
         const diff = expireTime - now;
         if (diff <= 0) {
+          if (countdownInterval) clearInterval(countdownInterval);
           localStorage.removeItem('boz_active_key');
           localStorage.removeItem('boz_key_expires');
           checkKeyStatus();
@@ -315,7 +315,7 @@
         document.getElementById('keyTimerDisplay').className = "font-bold text-emerald-600 text-xs";
       }
       updateCountdown();
-      setInterval(updateCountdown, 1000);
+      countdownInterval = setInterval(updateCountdown, 1000);
     }
 
     let qrTimerInterval = null;
