@@ -436,25 +436,25 @@
             body: JSON.stringify({ amount: totalAmount, email: userSession.email })
           });
           const json = await res.json();
-          if (json.success && json.paid) {
-            handleSuccessfulPayment(json.api_key);
+          if (json.success && json.paid && json.is_new_payment) {
+            handleSuccessfulPayment(json.api_key, json.expires_at);
           }
         } catch (e) {}
       }, 3000);
     }
 
-    function handleSuccessfulPayment(apiKey) {
+    function handleSuccessfulPayment(apiKey, serverExpiresAt) {
       if (pollInterval) clearInterval(pollInterval);
       if (qrTimerInterval) clearInterval(qrTimerInterval);
       localStorage.removeItem('boz_pending_qris');
 
       const unlockedKey = apiKey || `sk-boz-active-${Date.now().toString(36)}`;
-      const newExpiry = Date.now() + (24 * 60 * 60 * 1000);
+      const finalExpiry = serverExpiresAt || (Date.now() + (24 * 60 * 60 * 1000));
 
       localStorage.setItem('boz_active_key', unlockedKey);
-      localStorage.setItem('boz_key_expires', newExpiry);
+      localStorage.setItem('boz_key_expires', finalExpiry.toString());
 
-      alert('🎉 Pembayaran Berhasil Terverifikasi!\n\nAPI Key sk-boz-* Anda telah aktif & siap digunakan!');
+      alert('🎉 Pembayaran Berhasil Terverifikasi!\n\nMasa aktif API Key sk-boz-* Anda berhasil diperpanjang oleh Server!');
       checkKeyStatus();
       window.location.reload();
     }
