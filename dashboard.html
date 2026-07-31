@@ -319,15 +319,17 @@
     }
 
     let qrTimerInterval = null;
-    function startQr10MinTimer(expiresAt) {
+    function startQr10MinTimer(expiresAtInput) {
       if (qrTimerInterval) clearInterval(qrTimerInterval);
       document.getElementById('qrExpiredOverlay').classList.add('hidden');
+
+      const expiresAt = typeof expiresAtInput === 'number' ? expiresAtInput : new Date(expiresAtInput).getTime();
 
       function updateQrTimer() {
         const now = Date.now();
         const diffSeconds = Math.floor((expiresAt - now) / 1000);
 
-        if (diffSeconds <= 0) {
+        if (isNaN(diffSeconds) || diffSeconds <= 0) {
           clearInterval(qrTimerInterval);
           if (pollInterval) clearInterval(pollInterval);
           localStorage.removeItem('boz_pending_qris');
