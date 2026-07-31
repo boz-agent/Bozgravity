@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="id" class="scroll-smooth">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -13,148 +13,197 @@
     tailwind.config = {
       theme: {
         extend: {
-          fontFamily: { sans: ['Google Sans', 'sans-serif'] },
+          fontFamily: {
+            sans: ['"Google Sans"', 'sans-serif'],
+            display: ['"Google Sans"', 'sans-serif'],
+          },
           colors: {
-            'boz-black': '#0a0a0a',
-            'boz-dark': '#121212',
-            'boz-card': '#1a1a1a',
-            'boz-border': '#2a2a2a',
-            'boz-orange': '#ff5e00',
+            boz: {
+              orange: '#FF601C',
+              blue: '#077BF4',
+              black: '#121317',
+              gray: '#5f6368',
+              lightbg: '#f8f9fa',
+              cardbg: '#ffffff',
+              border: '#e2e8f0',
+            }
           }
         }
       }
     }
   </script>
+  <style>
+    body { background-color: #ffffff; color: #121317; font-family: 'Google Sans', sans-serif; overflow-x: hidden; width: 100%; }
+    .glass-nav { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+    .card-boz-white { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 1.5rem; transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1); box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+    .card-boz-white:hover { box-shadow: 0 20px 40px -15px rgba(18, 19, 23, 0.08); border-color: #cbd5e1; }
+    .btn-boz-orange { background-color: #FF601C; color: #ffffff; transition: all 0.2s ease; }
+    .btn-boz-orange:hover { background-color: #e04f0f; transform: translateY(-1px); box-shadow: 0 8px 20px -4px rgba(255, 96, 28, 0.35); }
+    .btn-boz-blue { background-color: #077BF4; color: #ffffff; transition: all 0.2s ease; }
+    .btn-boz-blue:hover { background-color: #0562c6; transform: translateY(-1px); box-shadow: 0 8px 20px -4px rgba(7, 123, 244, 0.35); }
+  </style>
 </head>
-<body class="bg-boz-black text-slate-100 min-h-screen font-sans flex flex-col antialiased">
+<body class="bg-white text-boz-black antialiased selection:bg-boz-orange selection:text-white min-h-screen flex flex-col">
 
-  <!-- Top Navbar -->
-  <header class="border-b border-boz-border bg-boz-dark/80 backdrop-blur-md sticky top-0 z-50">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+  <!-- Header / Navigation -->
+  <header class="sticky top-0 z-50 glass-nav border-b border-slate-100">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between gap-2">
+      
+      <!-- Brand Lockup -->
+      <a href="index.html" class="flex items-center group shrink-0 gap-2">
+        <img src="logo_transparent.png" alt="Bozgravity Gateway Logo" class="h-6 sm:h-8 w-auto group-hover:scale-105 transition-transform duration-300">
+        <span class="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-orange-50 text-boz-orange border border-orange-200">Dashboard</span>
+      </a>
+
+      <!-- Right User Controls -->
       <div class="flex items-center gap-3">
-        <a href="index.html" class="flex items-center gap-2">
-          <img src="logo_transparent.png" alt="Bozgravity" class="h-8 w-auto">
-          <span class="font-bold text-lg text-white tracking-tight">Bozgravity <span class="text-boz-orange text-xs px-2 py-0.5 rounded bg-boz-orange/10 border border-boz-orange/20">Dashboard</span></span>
-        </a>
-      </div>
-      <div class="flex items-center gap-4">
-        <div id="userInfo" class="flex items-center gap-2 bg-boz-card border border-boz-border px-3 py-1.5 rounded-full text-xs text-slate-300">
-          <img id="userAvatar" src="https://via.placeholder.com/32" class="w-5 h-5 rounded-full" alt="Avatar">
-          <span id="userEmail" class="font-semibold text-slate-200">user@gmail.com</span>
+        <div id="userInfo" class="flex items-center gap-2 bg-slate-50 border border-slate-200 px-3 py-1.5 rounded-full text-xs text-slate-700 shadow-sm">
+          <img id="userAvatar" src="https://via.placeholder.com/32" class="w-5 h-5 rounded-full border border-slate-200" alt="Avatar">
+          <span id="userEmail" class="font-semibold text-slate-900">user@gmail.com</span>
         </div>
-        <button onclick="logout()" class="text-xs text-slate-400 hover:text-white flex items-center gap-1">
-          <i data-lucide="log-out" class="w-3.5 h-3.5"></i> Logout
+        
+        <button onclick="logout()" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-slate-200 bg-white hover:bg-slate-50 text-slate-600 hover:text-slate-900 font-semibold text-xs transition-all shadow-sm">
+          <i data-lucide="log-out" class="w-3.5 h-3.5"></i>
+          <span>Keluar</span>
         </button>
       </div>
+
     </div>
   </header>
 
-  <!-- Main Content -->
-  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 py-8 grid grid-cols-1 lg:grid-cols-3 gap-8">
+  <!-- Main Dashboard Content -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10">
     
-    <!-- Left Column: Key & Usage -->
-    <div class="lg:col-span-2 space-y-6">
-      
-      <!-- API Key Card -->
-      <div class="bg-boz-card border border-boz-border rounded-2xl p-6 relative overflow-hidden">
-        <div class="flex items-center justify-between mb-4">
-          <h2 class="text-lg font-bold text-white flex items-center gap-2">
-            <i data-lucide="key" class="w-5 h-5 text-boz-orange"></i> API Key Aktif Anda
-          </h2>
-          <span class="text-xs bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-2.5 py-1 rounded-full font-medium">Status: ACTIVE</span>
-        </div>
-        
-        <div class="bg-boz-dark border border-boz-border rounded-xl p-4 flex items-center justify-between gap-2 mb-4">
-          <code id="apiKeyDisplay" class="text-sm sm:text-base font-mono text-boz-orange font-semibold truncate">sk-boz-********************************</code>
-          <button onclick="copyApiKey()" class="bg-boz-orange hover:bg-orange-600 text-white px-4 py-2 rounded-lg text-xs font-semibold flex items-center gap-1.5 shrink-0 transition-all">
-            <i data-lucide="copy" class="w-3.5 h-3.5"></i> Copy Key
-          </button>
-        </div>
-
-        <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 text-xs">
-          <div class="bg-boz-dark/50 p-3 rounded-lg border border-boz-border/50">
-            <span class="text-slate-400 block mb-1">Paket Aktif</span>
-            <span class="font-bold text-white text-sm">Harian Retail</span>
-          </div>
-          <div class="bg-boz-dark/50 p-3 rounded-lg border border-boz-border/50">
-            <span class="text-slate-400 block mb-1">Sisa Masa Aktif</span>
-            <span id="keyTimerDisplay" class="font-bold text-emerald-400 text-sm">23 J 59 M 59 S</span>
-          </div>
-          <div class="bg-boz-dark/50 p-3 rounded-lg border border-boz-border/50">
-            <span class="text-slate-400 block mb-1">Rate Limit</span>
-            <span class="font-bold text-white text-sm">60 Req / Min</span>
-          </div>
-          <div class="bg-boz-dark/50 p-3 rounded-lg border border-boz-border/50">
-            <span class="text-slate-400 block mb-1">Endpoint</span>
-            <span class="font-bold text-boz-orange text-sm truncate">api.bozagent.my.id</span>
-          </div>
-        </div>
+    <!-- Welcome Header -->
+    <div class="mb-8 flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-100 pb-6">
+      <div>
+        <h1 class="text-2xl sm:text-3xl font-bold tracking-tight text-boz-black">
+          Developer <span class="text-boz-blue">Portal</span>
+        </h1>
+        <p class="text-sm text-slate-500 mt-1">Kelola API Key, pantau kuota harian, dan perpanjang akses gateway Anda.</p>
       </div>
+      <div class="flex items-center gap-2">
+        <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 text-xs font-semibold">
+          <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+          Gateway API Active
+        </span>
+      </div>
+    </div>
 
-      <!-- Quick Integration Snippet -->
-      <div class="bg-boz-card border border-boz-border rounded-2xl p-6">
-        <h3 class="text-md font-bold text-white mb-3 flex items-center gap-2">
-          <i data-lucide="code" class="w-4 h-4 text-boz-orange"></i> Quick Integration (OpenAI SDK Compatible)
-        </h3>
-        <div class="bg-boz-dark p-4 rounded-xl font-mono text-xs text-slate-300 overflow-x-auto border border-boz-border">
-<pre><code>import { OpenAI } from 'openai';
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      
+      <!-- Left Column: Key & Usage -->
+      <div class="lg:col-span-2 space-y-6">
+        
+        <!-- API Key Card -->
+        <div class="card-boz-white p-6 relative overflow-hidden bg-white">
+          <div class="flex items-center justify-between mb-4">
+            <h2 class="text-base sm:text-lg font-bold text-boz-black flex items-center gap-2">
+              <i data-lucide="key" class="w-5 h-5 text-boz-orange"></i> API Key Aktif Anda
+            </h2>
+            <span class="text-xs bg-emerald-50 text-emerald-700 border border-emerald-200 px-3 py-1 rounded-full font-semibold">STATUS: ACTIVE</span>
+          </div>
+          
+          <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 flex items-center justify-between gap-3 mb-6">
+            <code id="apiKeyDisplay" class="text-sm sm:text-base font-mono text-boz-orange font-bold truncate">sk-boz-********************************</code>
+            <button onclick="copyApiKey()" class="btn-boz-orange px-4 py-2 rounded-lg text-xs font-bold flex items-center gap-1.5 shrink-0 shadow-sm">
+              <i data-lucide="copy" class="w-3.5 h-3.5"></i> Copied Key
+            </button>
+          </div>
 
-const client = new OpenAI({
-  baseURL: 'https://api.bozagent.my.id/v1',
-  apiKey: '<span id="snippetKey">sk-boz-...</span>',
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 text-xs">
+            <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200">
+              <span class="text-slate-500 block mb-1 font-medium">Paket Access</span>
+              <span class="font-bold text-boz-black text-sm">Retail Harian</span>
+            </div>
+            <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200">
+              <span class="text-slate-500 block mb-1 font-medium">Masa Aktif Sisa</span>
+              <span id="keyTimerDisplay" class="font-bold text-emerald-600 text-sm">23 J 59 M 59 S</span>
+            </div>
+            <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200">
+              <span class="text-slate-500 block mb-1 font-medium">Rate Limit</span>
+              <span class="font-bold text-boz-black text-sm">60 Req / Min</span>
+            </div>
+            <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200">
+              <span class="text-slate-500 block mb-1 font-medium">Endpoint Base</span>
+              <span class="font-bold text-boz-blue text-sm truncate">api.bozagent.my.id</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quick Integration Snippet -->
+        <div class="card-boz-white p-6 bg-white">
+          <h3 class="text-base font-bold text-boz-black mb-3 flex items-center gap-2">
+            <i data-lucide="code" class="w-4 h-4 text-boz-blue"></i> Quick Integration (OpenAI SDK Compatible)
+          </h3>
+          <p class="text-xs text-slate-500 mb-4">Gunakan base URL <code class="bg-slate-100 text-boz-blue px-1.5 py-0.5 rounded font-mono">https://api.bozagent.my.id/v1</code> pada OpenAI SDK, 9Router, Cursor, OpenCode, atau Ollama client.</p>
+          <div class="bg-slate-900 p-4 rounded-xl font-mono text-xs text-slate-200 overflow-x-auto border border-slate-800 shadow-inner">
+<pre><code><span class="text-purple-400">import</span> { OpenAI } <span class="text-purple-400">from</span> <span class="text-emerald-400">'openai'</span>;
+
+<span class="text-purple-400">const</span> client = <span class="text-purple-400">new</span> OpenAI({
+  baseURL: <span class="text-emerald-400">'https://api.bozagent.my.id/v1'</span>,
+  apiKey: <span class="text-emerald-400">'<span id="snippetKey">sk-boz-...</span>'</span>,
 });
 
-const response = await client.chat.completions.create({
-  model: 'boz/minimax-m3',
-  messages: [{ role: 'user', content: 'Halo Bozgravity!' }],
+<span class="text-purple-400">const</span> response = <span class="text-purple-400">await</span> client.chat.completions.create({
+  model: <span class="text-emerald-400">'minimax-m3'</span>, <span class="text-slate-500">// model pool: deepseek-r1, muse-spark-1.1, kimi-k2.7</span>
+  messages: [{ role: <span class="text-emerald-400">'user'</span>, content: <span class="text-emerald-400">'Halo Bozgravity!'</span> }],
 });</code></pre>
+          </div>
         </div>
+
       </div>
 
-    </div>
-
-    <!-- Right Column: Buy Retail / Top Up -->
-    <div class="space-y-6">
-      
-      <!-- ShopeePay QRIS Buy Box -->
-      <div class="bg-boz-card border border-boz-orange/30 rounded-2xl p-6 relative">
-        <h3 class="text-md font-bold text-white mb-2 flex items-center gap-2">
-          <i data-lucide="qr-code" class="w-5 h-5 text-boz-orange"></i> Perpanjang / Top Up Key
-        </h3>
-        <p class="text-xs text-slate-400 mb-4">Bayar instant via ShopeePay / All QRIS. Key otomatis terbit & aktif 24 jam.</p>
+      <!-- Right Column: Buy Retail / Top Up -->
+      <div class="space-y-6">
         
-        <div class="bg-boz-dark p-4 rounded-xl border border-boz-border text-center space-y-3 mb-4">
-          <span class="text-xs text-slate-400 block">Paket Retail Harian</span>
-          <span class="text-2xl font-extrabold text-white">Rp 5.000 <span class="text-xs font-normal text-slate-400">/ 24 Jam</span></span>
-          <button onclick="generateQRIS()" class="w-full bg-boz-orange hover:bg-orange-600 text-white font-bold py-2.5 rounded-xl text-xs transition-all flex items-center justify-center gap-2">
-            <i data-lucide="credit-card" class="w-4 h-4"></i> Generate QRIS ShopeePay
-          </button>
-        </div>
-
-        <div id="qrisContainer" class="hidden text-center space-y-3 p-4 bg-white rounded-xl">
-          <img id="qrisImage" src="" class="mx-auto w-48 h-48 border rounded" alt="QRIS">
-          <span class="text-xs text-slate-800 font-bold block">Scan QRIS via ShopeePay / e-Wallet</span>
-          <span class="text-[10px] text-slate-500 block">Status: Menunggu Pembayaran...</span>
-        </div>
-      </div>
-
-      <!-- Account Info -->
-      <div class="bg-boz-card border border-boz-border rounded-2xl p-6 space-y-3">
-        <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wider">Account Detail</h4>
-        <div class="text-xs space-y-2">
-          <div class="flex justify-between text-slate-300">
-            <span>Verified Email:</span>
-            <span id="accountEmail" class="font-semibold text-white"></span>
+        <!-- ShopeePay QRIS Buy Box -->
+        <div class="card-boz-white p-6 relative border-orange-200 bg-gradient-to-b from-orange-50/50 to-white">
+          <h3 class="text-base font-bold text-boz-black mb-1 flex items-center gap-2">
+            <i data-lucide="qr-code" class="w-5 h-5 text-boz-orange"></i> Perpanjang / Top Up Key
+          </h3>
+          <p class="text-xs text-slate-500 mb-4">Bayar instant via ShopeePay / All QRIS. Key otomatis terbit & aktif 24 jam.</p>
+          
+          <div class="bg-white p-4 rounded-2xl border border-slate-200 text-center space-y-3 mb-4 shadow-sm">
+            <span class="text-xs text-slate-500 block font-medium">Paket Retail Harian</span>
+            <span class="text-3xl font-extrabold text-boz-black">Rp 5.000 <span class="text-xs font-normal text-slate-400">/ 24 Jam</span></span>
+            <button onclick="generateQRIS()" class="w-full btn-boz-orange font-bold py-3 rounded-xl text-xs flex items-center justify-center gap-2 shadow-sm">
+              <i data-lucide="credit-card" class="w-4 h-4"></i> Generate QRIS ShopeePay
+            </button>
           </div>
-          <div class="flex justify-between text-slate-300">
-            <span>Provider Auth:</span>
-            <span class="text-emerald-400 font-semibold">Google OAuth</span>
+
+          <div id="qrisContainer" class="hidden text-center space-y-3 p-4 bg-white rounded-xl border border-slate-200">
+            <img id="qrisImage" src="" class="mx-auto w-48 h-48 border border-slate-200 rounded-lg p-2 bg-white" alt="QRIS">
+            <span class="text-xs text-slate-800 font-bold block">Scan QRIS via ShopeePay / e-Wallet</span>
+            <span class="text-[10px] text-slate-500 block">Status: Menunggu Pembayaran...</span>
           </div>
         </div>
-      </div>
 
+        <!-- Account Info -->
+        <div class="card-boz-white p-6 space-y-3 bg-white">
+          <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wider">Detail Akun Developer</h4>
+          <div class="text-xs space-y-2.5 pt-1 border-t border-slate-100">
+            <div class="flex justify-between items-center text-slate-600">
+              <span>Verified Email:</span>
+              <span id="accountEmail" class="font-bold text-boz-black"></span>
+            </div>
+            <div class="flex justify-between items-center text-slate-600">
+              <span>Provider Auth:</span>
+              <span class="text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200 font-semibold">Google OAuth</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
     </div>
   </main>
+
+  <!-- Footer -->
+  <footer class="border-t border-slate-100 bg-white py-6 mt-12">
+    <div class="max-w-7xl mx-auto px-4 text-center text-xs text-slate-400">
+      &copy; 2026 Bozgravity Gateway — All Rights Reserved.
+    </div>
+  </footer>
 
   <script>
     lucide.createIcons();
@@ -185,7 +234,7 @@ const response = await client.chat.completions.create({
         const diff = expireTime - now;
         if (diff <= 0) {
           document.getElementById('keyTimerDisplay').innerText = "EXPIRED (Silakan Top Up)";
-          document.getElementById('keyTimerDisplay').className = "font-bold text-rose-500 text-sm";
+          document.getElementById('keyTimerDisplay').className = "font-bold text-rose-600 text-sm";
           return;
         }
         const hours = Math.floor(diff / (1000 * 60 * 60));
