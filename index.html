@@ -486,7 +486,7 @@
       try {
         const u = JSON.parse(existingUser);
         if (u && u.email) {
-          window.location.href = 'dashboard.html';
+          window.location.href = '/dashboard/';
         }
       } catch (e) {}
     }
@@ -517,7 +517,7 @@
           picture: payload.picture,
           sub: payload.sub
         }));
-        window.location.href = 'dashboard.html';
+        window.location.href = '/dashboard/';
       }
     }
 
@@ -560,7 +560,7 @@
     function triggerGoogleOneTap() {
       const user = localStorage.getItem('boz_user');
       if (user) {
-        window.location.href = 'dashboard.html';
+        window.location.href = '/dashboard/';
       } else if (window.google && google.accounts && google.accounts.id) {
         google.accounts.id.prompt();
       } else {
