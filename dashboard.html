@@ -257,6 +257,9 @@
       } else {
         document.getElementById('userEmail').innerText = userSession.email;
         document.getElementById('accountEmail').innerText = userSession.email;
+        if (userSession.email) {
+          localStorage.setItem('boz_user_email', userSession.email);
+        }
         if (userSession.picture) document.getElementById('userAvatar').src = userSession.picture;
 
         checkKeyStatus();
@@ -476,7 +479,17 @@
       btn.innerHTML = `<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i> Memeriksa Pembayaran...`;
 
       try {
-        const userEmail = (typeof userSession !== 'undefined' && userSession && userSession.email) ? userSession.email : '';
+        let userEmail = (typeof userSession !== 'undefined' && userSession && userSession.email) ? userSession.email : '';
+        if (!userEmail) {
+          const emailElem = document.getElementById('accountEmail');
+          if (emailElem && emailElem.innerText) {
+            userEmail = emailElem.innerText.trim();
+          }
+        }
+        if (!userEmail) {
+          userEmail = localStorage.getItem('boz_user_email') || '';
+        }
+
         const pendingData = JSON.parse(localStorage.getItem('boz_pending_qris') || '{}');
         const amountToCheck = pendingData.total_amount || 0;
 
