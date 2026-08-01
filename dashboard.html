@@ -344,9 +344,11 @@
       countdownInterval = setInterval(updateCountdown, 1000);
     }
 
-    let qrTimerInterval = null;
+    window.pollInterval = null;
+    window.qrTimerInterval = null;
+
     function startQr10MinTimer(expiresAtInput) {
-      if (qrTimerInterval) clearInterval(qrTimerInterval);
+      if (window.qrTimerInterval) clearInterval(window.qrTimerInterval);
       const overlay = document.getElementById('qrExpiredOverlay');
       if (overlay) overlay.classList.add('hidden');
 
@@ -361,8 +363,8 @@
 
         const timerElem = document.getElementById('qrTimerCount');
         if (diffSeconds <= 0) {
-          if (qrTimerInterval) clearInterval(qrTimerInterval);
-          if (pollInterval) clearInterval(pollInterval);
+          if (window.qrTimerInterval) clearInterval(window.qrTimerInterval);
+          if (window.pollInterval) clearInterval(window.pollInterval);
           localStorage.removeItem('boz_pending_qris');
           if (timerElem) timerElem.innerText = "00:00";
           if (overlay) overlay.classList.remove('hidden');
@@ -377,7 +379,7 @@
       }
 
       updateQrTimer();
-      qrTimerInterval = setInterval(updateQrTimer, 1000);
+      window.qrTimerInterval = setInterval(updateQrTimer, 1000);
     }
 
     function restorePendingQRIS() {
@@ -502,9 +504,9 @@
       }
     }
     function startPaymentPolling(totalAmount) {
-      if (pollInterval) clearInterval(pollInterval);
+      if (window.pollInterval) clearInterval(window.pollInterval);
 
-      pollInterval = setInterval(async () => {
+      window.pollInterval = setInterval(async () => {
         try {
           const res = await fetch('https://api.bozgravity.web.id/check-payment', {
             method: 'POST',
@@ -523,8 +525,8 @@
     }
 
     function handleSuccessfulPayment(apiKey, serverExpiresAt) {
-      if (pollInterval) clearInterval(pollInterval);
-      if (qrTimerInterval) clearInterval(qrTimerInterval);
+      if (window.pollInterval) clearInterval(window.pollInterval);
+      if (window.qrTimerInterval) clearInterval(window.qrTimerInterval);
       localStorage.removeItem('boz_pending_qris');
 
       const unlockedKey = apiKey || `sk-boz-active-${Date.now().toString(36)}`;
