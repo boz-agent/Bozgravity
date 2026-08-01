@@ -496,9 +496,34 @@
       localStorage.setItem('boz_active_key', unlockedKey);
       localStorage.setItem('boz_key_expires', finalExpiry.toString());
 
-      alert('🎉 Pembayaran Berhasil Terverifikasi!\n\nMasa aktif API Key sk-boz-* Anda berhasil diperpanjang oleh Server!');
-      checkKeyStatus();
-      window.location.reload();
+      // HIDE QR CONTAINER & EXPIRY OVERLAY
+      const qContainer = document.getElementById('qrisContainer');
+      if (qContainer) qContainer.classList.add('hidden');
+
+      // INSTANT UNLOCK & DISPLAY FULL API KEY
+      document.getElementById('apiKeyDisplay').innerText = unlockedKey;
+      document.getElementById('snippetKey').innerText = unlockedKey;
+      document.getElementById('keyBadge').innerText = "STATUS: ACTIVE";
+      document.getElementById('keyBadge').className = "text-xs bg-emerald-50 text-emerald-700 border border-emerald-200 px-3 py-1 rounded-full font-semibold";
+
+      const copyBtn = document.getElementById('copyKeyBtn');
+      if (copyBtn) {
+        copyBtn.disabled = false;
+        copyBtn.className = "btn-boz-orange bg-boz-orange text-white hover:bg-orange-600 px-4 py-2 rounded-lg text-xs font-bold flex items-center gap-1.5 shrink-0 shadow-sm cursor-pointer transition-all";
+      }
+
+      document.getElementById('gatewayBadgeStatus').innerHTML = `
+        <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+        Gateway API Active
+      `;
+      document.getElementById('gatewayBadgeStatus').className = "inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 text-xs font-semibold";
+
+      startCountdownTimer(finalExpiry);
+      fetchUserRecentRequests(unlockedKey);
+      if (window.userRequestInterval) clearInterval(window.userRequestInterval);
+      window.userRequestInterval = setInterval(() => fetchUserRecentRequests(unlockedKey), 2000);
+
+      alert(`🎉 PEMBAYARAN BERHASIL TERVERIFIKASI!\n\nAPI Key Aktif Anda:\n${unlockedKey}\n\nMasa aktif telah diperpanjang 24 Jam!`);
     }
 
     async function fetchUserRecentRequests(key) {
