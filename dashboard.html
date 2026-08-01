@@ -441,7 +441,14 @@
       btn.innerHTML = `<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i> Memproses...`;
 
       try {
-        const userEmail = (typeof userSession !== 'undefined' && userSession && userSession.email) ? userSession.email : 'dannboss18@gmail.com';
+        let userEmail = (typeof userSession !== 'undefined' && userSession && userSession.email) ? userSession.email : '';
+        if (!userEmail) userEmail = localStorage.getItem('boz_user_email') || '';
+        if (!userEmail) {
+          const emailEl = document.getElementById('accountEmail');
+          if (emailEl && emailEl.innerText && emailEl.innerText.includes('@')) {
+            userEmail = emailEl.innerText.trim();
+          }
+        }
 
         const res = await fetch('https://api.bozgravity.web.id/create-qris', {
           method: 'POST',
