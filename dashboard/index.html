@@ -170,51 +170,55 @@
       </div>
 
       <!-- Right Column: Buy Retail / Top Up -->
-      <div class="space-y-6">
-        
-        <!-- ShopeePay QRIS Buy Box -->
-        <div class="card-boz-white p-6 relative border-orange-200 bg-gradient-to-b from-orange-50/50 to-white rounded-2xl border shadow-sm">
-          <h3 class="text-base font-bold text-boz-black mb-1 flex items-center gap-2">
-            <i data-lucide="qr-code" class="w-5 h-5 text-boz-orange"></i> Aktifkan / Perpanjang Key
-          </h3>
-          <p class="text-xs text-slate-500 mb-4">Bayar instant via ShopeePay / All QRIS. Key otomatis terbit & aktif 24 jam.</p>
-          
-          <div class="bg-white p-4 rounded-2xl border border-slate-200 text-center space-y-3 mb-4 shadow-sm">
-            <span class="text-xs text-slate-500 block font-medium">Paket Retail Harian</span>
-            <div class="text-3xl font-bold text-boz-black mb-2">Rp 3.000 <span class="text-sm font-normal text-slate-500">/ 24 jam</span></div>
-            <button id="generateBtn" onclick="generateQRIS(this)" class="w-full bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white font-bold py-3 rounded-xl text-xs flex items-center justify-center gap-2 shadow-md shadow-orange-500/20 transition-all">
-              <i data-lucide="credit-card" class="w-4 h-4"></i> Generate QRIS Kode Unik
-            </button>
-          </div>
-
-          <div id="qrisContainer" class="hidden text-center space-y-3 p-4 bg-white rounded-xl border border-slate-200 shadow-sm relative">
-            <div id="qrExpiredOverlay" class="hidden absolute inset-0 bg-white/95 backdrop-blur-sm rounded-xl flex flex-col items-center justify-center p-4 z-10 space-y-2">
-              <i data-lucide="clock-alert" class="w-8 h-8 text-rose-500"></i>
-              <span class="text-xs font-bold text-slate-800">QR Code Expired (10 Menit)</span>
-              <span class="text-[10px] text-slate-500">Silakan generate QRIS baru untuk mendapatkan kode unik terbaru.</span>
-              <button onclick="generateQRIS(document.getElementById('generateBtn'))" class="bg-boz-orange text-white text-xs font-bold px-3 py-1.5 rounded-lg shadow-sm">
-                Generate QRIS Baru
-              </button>
-            </div>
-
-            <img id="qrisImage" src="" class="mx-auto w-48 h-48 border border-slate-200 rounded-lg p-2 bg-white" alt="QRIS">
+      <!-- Package Info -->
+      <div class="card-boz-white p-6 space-y-4 bg-white rounded-2xl border border-slate-200 shadow-sm">
+        <div class="flex items-center justify-between">
+          <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wider">Paket Retail Harian</h4>
+          <span class="text-[10px] bg-orange-50 text-boz-orange border border-orange-200 px-2 py-0.5 rounded-full font-bold">24 Jam Active</span>
+        </div>
             
-            <div class="bg-amber-50 border border-amber-200 p-2.5 rounded-lg text-xs space-y-1">
-              <span class="text-slate-500 block font-medium">Total Tagihan (Termasuk Kode Unik):</span>
-              <span id="uniqueAmountDisplay" class="text-lg font-extrabold text-boz-orange font-mono">Rp 5.000</span>
-              <span class="text-[10px] text-amber-700 block italic">⚠️ Transfer sesuai nominal persis di atas agar otomatis terverifikasi!</span>
-            </div>
+        <div class="space-y-1">
+          <div class="text-2xl font-extrabold text-boz-black">Rp 3.000 <span class="text-xs font-semibold text-slate-500">/ 24 jam</span></div>
+          <p class="text-xs text-slate-500">Akses 4 model AI aktif (DeepSeek Flash, MiMo, Meta AI, MiniMax M3).</p>
+        </div>
 
-            <div class="flex items-center justify-between text-xs text-slate-600 font-medium pt-1 px-1 border-t border-slate-100">
-              <span class="flex items-center gap-1.5">
-                <span class="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
-                Menunggu Mutasi Masuk...
-              </span>
-              <span id="qrTimerCount" class="font-mono text-rose-600 font-bold bg-rose-50 px-2 py-0.5 rounded border border-rose-200">
-                10:00
-              </span>
-            </div>
-          </div>
+        <button id="generateBtn" onclick="generateQRIS(this)" class="w-full bg-[#FF601C] hover:bg-orange-600 text-white font-bold py-3 rounded-xl text-xs flex items-center justify-center gap-2 shadow-sm transition-all cursor-pointer">
+          <i data-lucide="credit-card" class="w-4 h-4"></i> Generate QRIS Kode Unik
+        </button>
+      </div>
+
+      <div id="qrisContainer" class="hidden text-center space-y-3 p-4 bg-white rounded-xl border border-slate-200 shadow-sm relative">
+        <div id="qrExpiredOverlay" class="hidden absolute inset-0 bg-white/95 backdrop-blur-sm rounded-xl flex flex-col items-center justify-center p-4 z-10 space-y-2">
+          <i data-lucide="clock-alert" class="w-8 h-8 text-rose-500"></i>
+          <span class="text-xs font-bold text-slate-800">QR Code Expired (10 Menit)</span>
+          <span class="text-[10px] text-slate-500">Silakan generate QRIS baru untuk mendapatkan kode unik terbaru.</span>
+          <button onclick="generateQRIS(document.getElementById('generateBtn'))" class="bg-[#FF601C] hover:bg-orange-600 text-white text-xs font-bold px-3 py-1.5 rounded-lg shadow-sm cursor-pointer">
+            Generate QRIS Baru
+          </button>
+        </div>
+
+        <img id="qrisImage" src="" class="mx-auto w-48 h-48 border border-slate-200 rounded-lg p-2 bg-white" alt="QRIS">
+            
+        <div class="bg-amber-50 border border-amber-200 p-2.5 rounded-lg text-xs space-y-1">
+          <span class="text-slate-500 block font-medium">Total Tagihan (Termasuk Kode Unik):</span>
+          <span id="uniqueAmountDisplay" class="text-lg font-extrabold text-boz-orange font-mono">Rp 3.000</span>
+          <span class="text-[10px] text-amber-700 block italic">⚠️ Transfer sesuai nominal persis di atas agar otomatis terverifikasi!</span>
+        </div>
+
+        <button id="verifyPaidBtn" onclick="checkPaymentStatusManual(this)" class="w-full bg-[#077BF4] hover:bg-blue-600 text-white font-bold py-2.5 rounded-xl text-xs flex items-center justify-center gap-2 shadow-sm transition-all cursor-pointer">
+          <i data-lucide="check-circle" class="w-4 h-4"></i> Sudah bayar silakan cek!
+        </button>
+
+        <div class="flex items-center justify-between text-xs text-slate-600 font-medium pt-1 px-1 border-t border-slate-100">
+          <span class="flex items-center gap-1.5">
+            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
+            Menunggu Mutasi Masuk...
+          </span>
+          <span id="qrTimerCount" class="font-mono text-rose-600 font-bold bg-rose-50 px-2 py-0.5 rounded border border-rose-200">
+            10:00
+          </span>
+        </div>
+      </div>
         </div>
 
         <!-- Account Info -->
@@ -463,7 +467,40 @@
       }
     }
 
-    let pollInterval = null;
+    async function checkPaymentStatusManual(btn) {
+      if (!btn) return;
+      const originalText = btn.innerHTML;
+      btn.disabled = true;
+      btn.innerHTML = `<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i> Memeriksa Pembayaran...`;
+
+      try {
+        const userEmail = (typeof userSession !== 'undefined' && userSession && userSession.email) ? userSession.email : '';
+        const pendingData = JSON.parse(localStorage.getItem('boz_pending_qris') || '{}');
+        const amountToCheck = pendingData.total_amount || 0;
+
+        const res = await fetch('https://api.bozgravity.web.id/check-payment', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-API-Key': 'bozgravity-shopeepay-secret-key-2026'
+          },
+          body: JSON.stringify({ amount: amountToCheck, email: userEmail })
+        });
+        const json = await res.json();
+        
+        if (json.success && json.paid) {
+          handleSuccessfulPayment(json.api_key, json.expires_at);
+        } else {
+          alert('⚠️ Pembayaran Belum Terdeteksi Server\n\n' + (json.message || 'Silakan pastikan Anda telah mentransfer sesuai nominal unik persis yang tertera.'));
+        }
+      } catch (err) {
+        alert('Terjadi kesalahan koneksi server saat memeriksa pembayaran.');
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = originalText;
+        try { lucide.createIcons(); } catch(e) {}
+      }
+    }
     function startPaymentPolling(totalAmount) {
       if (pollInterval) clearInterval(pollInterval);
 
