@@ -244,19 +244,21 @@
   </footer>
 
   <script>
-    lucide.createIcons();
+    window.addEventListener('DOMContentLoaded', () => {
+      lucide.createIcons();
 
-    const userSession = JSON.parse(localStorage.getItem('boz_user') || '{}');
-    if (!userSession.email) {
-      window.location.href = '/';
-    } else {
-      document.getElementById('userEmail').innerText = userSession.email;
-      document.getElementById('accountEmail').innerText = userSession.email;
-      if (userSession.picture) document.getElementById('userAvatar').src = userSession.picture;
+      const userSession = JSON.parse(localStorage.getItem('boz_user') || '{}');
+      if (!userSession.email) {
+        window.location.href = '/';
+      } else {
+        document.getElementById('userEmail').innerText = userSession.email;
+        document.getElementById('accountEmail').innerText = userSession.email;
+        if (userSession.picture) document.getElementById('userAvatar').src = userSession.picture;
 
-      checkKeyStatus();
-      restorePendingQRIS();
-    }
+        checkKeyStatus();
+        restorePendingQRIS();
+      }
+    });
 
     async function checkKeyStatus() {
       const activeKey = localStorage.getItem('boz_active_key');
