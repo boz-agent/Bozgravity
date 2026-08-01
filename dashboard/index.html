@@ -281,6 +281,8 @@
 
         startCountdownTimer(parseInt(expireTime, 10));
         fetchUserRecentRequests(activeKey);
+        if (window.userRequestInterval) clearInterval(window.userRequestInterval);
+        window.userRequestInterval = setInterval(() => fetchUserRecentRequests(activeKey), 2000);
       } else {
         // LOCKED STATE
         document.getElementById('apiKeyDisplay').innerText = 'sk-boz-********************************';
