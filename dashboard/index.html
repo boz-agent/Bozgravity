@@ -430,7 +430,7 @@
           container.classList.remove('hidden');
           lucide.createIcons();
 
-          const expiresMs = typeof json.data.expires_at === 'number' ? json.data.expires_at : new Date(json.data.expires_at).getTime();
+          const expiresMs = typeof json.data.expires_at === 'number' ? json.data.expires_at : parseInt(json.data.expires_at, 10);
 
           // PERSIST IN LOCALSTORAGE (SURVIVES REFRESH)
           localStorage.setItem('boz_pending_qris', JSON.stringify({
