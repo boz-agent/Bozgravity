@@ -341,25 +341,28 @@
     let qrTimerInterval = null;
     function startQr10MinTimer(expiresAtInput) {
       if (qrTimerInterval) clearInterval(qrTimerInterval);
-      document.getElementById('qrExpiredOverlay').classList.add('hidden');
+      const overlay = document.getElementById('qrExpiredOverlay');
+      if (overlay) overlay.classList.add('hidden');
 
-      const expiresAt = typeof expiresAtInput === 'number' ? expiresAtInput : new Date(expiresAtInput).getTime();
+      const expiresAt = typeof expiresAtInput === 'number' ? expiresAtInput : parseInt(expiresAtInput, 10);
 
       function updateQrTimer() {
         const now = Date.now();
-        const diffSeconds = Math.floor((expiresAt - now) / 1000);
+        const diffSeconds = Math.max(0, Math.floor((expiresAt - now) / 1000));
 
-        if (isNaN(diffSeconds) || diffSeconds <= 0) {
-          clearInterval(qrTimerInterval);
+        const timerElem = document.getElementById('qrTimerCount');
+        if (timerElem) {
+          const mins = Math.floor(diffSeconds / 60).toString().padStart(2, '0');
+          const secs = (diffSeconds % 60).toString().padStart(2, '0');
+          timerElem.innerText = `${mins}:${secs}`;
+        }
+
+        if (diffSeconds <= 0) {
+          if (qrTimerInterval) clearInterval(qrTimerInterval);
           if (pollInterval) clearInterval(pollInterval);
           localStorage.removeItem('boz_pending_qris');
-          document.getElementById('qrExpiredOverlay').classList.remove('hidden');
-          document.getElementById('qrTimerCount').innerText = "00:00";
-          return;
+          if (overlay) overlay.classList.remove('hidden');
         }
-        const mins = Math.floor(diffSeconds / 60).toString().padStart(2, '0');
-        const secs = (diffSeconds % 60).toString().padStart(2, '0');
-        document.getElementById('qrTimerCount').innerText = `${mins}:${secs}`;
       }
 
       updateQrTimer();
