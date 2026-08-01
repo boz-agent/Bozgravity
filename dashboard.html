@@ -181,7 +181,7 @@
           
           <div class="bg-white p-4 rounded-2xl border border-slate-200 text-center space-y-3 mb-4 shadow-sm">
             <span class="text-xs text-slate-500 block font-medium">Paket Retail Harian</span>
-            <div class="text-3xl font-bold text-white mb-2">Rp 3.000 <span class="text-sm font-normal text-slate-400">/ 24 jam</span></div>
+            <div class="text-3xl font-bold text-boz-black mb-2">Rp 3.000 <span class="text-sm font-normal text-slate-500">/ 24 jam</span></div>
             <button id="generateBtn" onclick="generateQRIS(this)" class="w-full bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white font-bold py-3 rounded-xl text-xs flex items-center justify-center gap-2 shadow-md shadow-orange-500/20 transition-all">
               <i data-lucide="credit-card" class="w-4 h-4"></i> Generate QRIS Kode Unik
             </button>
@@ -258,11 +258,24 @@
       restorePendingQRIS();
     }
 
-    function checkKeyStatus() {
+    async function checkKeyStatus() {
       const activeKey = localStorage.getItem('boz_active_key');
       const expireTime = localStorage.getItem('boz_key_expires');
 
       if (activeKey && expireTime && Date.now() < parseInt(expireTime, 10)) {
+        // Double check against Server State
+        try {
+          const res = await fetch(`https://api.bozgravity.web.id/api/verify-user-key?key=${encodeURIComponent(activeKey)}`);
+          const json = await res.json();
+          if (!json.valid) {
+            // Server marked key expired or invalid -> AUTO BURN LOCALSTORAGE
+            localStorage.removeItem('boz_active_key');
+            localStorage.removeItem('boz_key_expires');
+            window.location.reload();
+            return;
+          }
+        } catch(e) {}
+
         // UNLOCKED STATE
         document.getElementById('apiKeyDisplay').innerText = activeKey;
         document.getElementById('snippetKey').innerText = activeKey;
@@ -285,6 +298,9 @@
         window.userRequestInterval = setInterval(() => fetchUserRecentRequests(activeKey), 2000);
       } else {
         // LOCKED STATE
+        localStorage.removeItem('boz_active_key');
+        localStorage.removeItem('boz_key_expires');
+
         document.getElementById('apiKeyDisplay').innerText = 'sk-boz-********************************';
         document.getElementById('snippetKey').innerText = 'sk-boz-****************';
         document.getElementById('keyBadge').innerText = 'STATUS: UNPAID / EXPIRED';
