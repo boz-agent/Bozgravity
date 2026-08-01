@@ -268,8 +268,24 @@
     });
 
     async function checkKeyStatus() {
-      const activeKey = localStorage.getItem('boz_active_key');
-      const expireTime = localStorage.getItem('boz_key_expires');
+      let activeKey = localStorage.getItem('boz_active_key');
+      let expireTime = localStorage.getItem('boz_key_expires');
+
+      const userEmail = (typeof userSession !== 'undefined' && userSession && userSession.email) ? userSession.email : (localStorage.getItem('boz_user_email') || '');
+
+      // AUTO-RECOVER ACTIVE KEY FROM SERVER BY USER EMAIL IF LOCALSTORAGE IS EMPTY
+      if ((!activeKey || !expireTime) && userEmail) {
+        try {
+          const res = await fetch(`https://api.bozgravity.web.id/api/verify-user-key?key=${encodeURIComponent(userEmail)}`);
+          const json = await res.json();
+          if (json.valid && json.apiKey && json.expiresAt) {
+            activeKey = json.apiKey;
+            expireTime = json.expiresAt;
+            localStorage.setItem('boz_active_key', activeKey);
+            localStorage.setItem('boz_key_expires', expireTime);
+          }
+        } catch(e) {}
+      }
 
       if (activeKey && expireTime && Date.now() < parseInt(expireTime, 10)) {
         // Double check against Server State
