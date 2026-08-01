@@ -301,6 +301,14 @@
         `;
         document.getElementById('gatewayBadgeStatus').className = "inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 text-xs font-semibold";
 
+        // DISABLE GENERATE QRIS BUTTON WHEN KEY IS ACTIVE
+        const genQrisBtn = document.getElementById('genQrisBtn');
+        if (genQrisBtn) {
+          genQrisBtn.disabled = true;
+          genQrisBtn.className = "w-full bg-slate-200 text-slate-400 font-bold py-3.5 px-4 rounded-xl text-sm transition-all cursor-not-allowed flex items-center justify-center gap-2 border border-slate-300";
+          genQrisBtn.innerHTML = `<i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-600"></i> API Key Masih Aktif`;
+        }
+
         startCountdownTimer(parseInt(expireTime, 10));
         fetchUserRecentRequests(activeKey);
         if (window.userRequestInterval) clearInterval(window.userRequestInterval);
@@ -321,6 +329,14 @@
 
         document.getElementById('keyTimerDisplay').innerText = "Belum Aktif (Silakan Bayar)";
         document.getElementById('keyTimerDisplay').className = "font-bold text-rose-600 text-xs";
+
+        // RE-ENABLE GENERATE QRIS BUTTON WHEN EXPIRED
+        const genQrisBtn = document.getElementById('genQrisBtn');
+        if (genQrisBtn) {
+          genQrisBtn.disabled = false;
+          genQrisBtn.className = "w-full btn-boz-orange font-bold py-3.5 px-4 rounded-xl text-sm transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2 cursor-pointer";
+          genQrisBtn.innerHTML = `<i data-lucide="qr-code" class="w-4 h-4"></i> Generate QRIS Kode Unik`;
+        }
       }
     }
 
