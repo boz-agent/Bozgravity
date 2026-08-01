@@ -348,20 +348,22 @@
 
       function updateQrTimer() {
         const now = Date.now();
-        const diffSeconds = Math.max(0, Math.floor((expiresAt - now) / 1000));
+        const diffSeconds = Math.floor((expiresAt - now) / 1000);
 
         const timerElem = document.getElementById('qrTimerCount');
-        if (timerElem) {
-          const mins = Math.floor(diffSeconds / 60).toString().padStart(2, '0');
-          const secs = (diffSeconds % 60).toString().padStart(2, '0');
-          timerElem.innerText = `${mins}:${secs}`;
-        }
-
         if (diffSeconds <= 0) {
           if (qrTimerInterval) clearInterval(qrTimerInterval);
           if (pollInterval) clearInterval(pollInterval);
           localStorage.removeItem('boz_pending_qris');
+          if (timerElem) timerElem.innerText = "00:00";
           if (overlay) overlay.classList.remove('hidden');
+          return;
+        }
+
+        if (timerElem) {
+          const mins = Math.floor(diffSeconds / 60).toString().padStart(2, '0');
+          const secs = (diffSeconds % 60).toString().padStart(2, '0');
+          timerElem.innerText = `${mins}:${secs}`;
         }
       }
 
@@ -395,6 +397,7 @@
           startPaymentPolling(data.total_amount || data.amount);
         } else {
           localStorage.removeItem('boz_pending_qris');
+          document.getElementById('qrExpiredOverlay').classList.remove('hidden');
         }
       } catch (e) {
         console.error('restorePendingQRIS error:', e);
